@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#01051a"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/iv_logo_symbol"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginBottom="-65dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/logo_description"
+        android:src="@drawable/logo_short"
+        android:elevation="10dp" />
+
+    <ImageView
+        android:id="@+id/iv_logo_text"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/logo_description"
+        android:src="@drawable/logo_long"
+        android:elevation="1dp" />
+
+    <Button
+        android:id="@+id/btn_role_admin"
+        android:layout_width="300dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#00E676"
+        android:elevation="4dp"
+        android:fontFamily="@font/rajdhani_bold"
+        android:letterSpacing="0.05"
+        android:text="@string/match_statistician"
+        android:textAllCaps="true"
+        android:textColor="#01051a"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btn_role_fan"
+        android:layout_width="300dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="4dp"
+        android:fontFamily="@font/rajdhani_bold"
+        android:text="@string/fan"
+        android:textAllCaps="true"
+        android:textColor="#01051a"
+        android:textSize="20sp"
+        android:letterSpacing="0.05" />
+
+    <TextView
+        android:id="@+id/tv_main_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_your_role_to_continue"
+        android:textSize="15sp"
+        android:textColor="#D3D3D3"
+        android:fontFamily="@font/rajdhani_semibold"
+        android:textAlignment="center"
+        android:alpha="0.8" />
+
+</LinearLayout>
