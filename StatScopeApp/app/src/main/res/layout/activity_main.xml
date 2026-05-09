@@ -42,7 +42,8 @@
         android:text="@string/match_statistician"
         android:textAllCaps="true"
         android:textColor="#01051a"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:foreground="?attr/selectableItemBackground"/>
 
     <Button
         android:id="@+id/btn_role_fan"
@@ -57,7 +58,8 @@
         android:textAllCaps="true"
         android:textColor="#01051a"
         android:textSize="20sp"
-        android:letterSpacing="0.05" />
+        android:letterSpacing="0.05"
+        android:foreground="?attr/selectableItemBackground"/>
 
     <TextView
         android:id="@+id/tv_main_subtitle"

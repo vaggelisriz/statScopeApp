@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#01051a"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_dashboard_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/rajdhani_bold"
+        android:text="STATISTICIAN DASHBOARD"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp" />
+
+    <View
+        android:layout_width="60dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="40dp"
+        android:background="#00E676" />
+
+    <Button
+        android:id="@+id/btn_start_match"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#00E676"
+        android:fontFamily="@font/rajdhani_bold"
+        android:text="START LIVE MATCH"
+        android:textColor="#01051a"
+        android:textSize="18sp"
+        android:foreground="?attr/selectableItemBackground" />
+
+    <Button
+        android:id="@+id/btn_view_history"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="@font/rajdhani_bold"
+        android:text="MATCH HISTORY"
+        android:textColor="#01051a"
+        android:textSize="18sp"
+        android:foreground="?attr/selectableItemBackground" />
+
+    <Button
+        android:id="@+id/btn_manage_teams"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="@font/rajdhani_bold"
+        android:text="TEAM MANAGEMENT"
+        android:textColor="#01051a"
+        android:textSize="18sp"
+        android:foreground="?attr/selectableItemBackground" />
+
+</LinearLayout>
