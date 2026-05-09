@@ -1,0 +1,3 @@
+.DS_Store
+Thumbs.db
+config/dbConnect.php  # Προαιρετικά, αν δεν θες να φαίνονται οι κωδικοί της βάσης σου
