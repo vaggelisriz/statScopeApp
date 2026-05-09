@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">StatScopeApp</string>
+    <string name="statscope">StatScope</string>
+    <string name="choose_your_role_to_continue">Choose your role to continue</string>
+    <string name="match_statistician">Match Statistician</string>
+    <string name="fan">Fan</string>
+    <string name="logo_description">StatScope Logo</string>
+</resources>
