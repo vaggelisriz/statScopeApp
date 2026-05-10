@@ -5,4 +5,9 @@
     <string name="match_statistician">Match Statistician</string>
     <string name="fan">Fan</string>
     <string name="logo_description">StatScope Logo</string>
+    <string name="available_matches">Available Matches</string>
+    <string name="lineups">LINEUPS</string>
+    <string name="home">HOME</string>
+    <string name="away">AWAY</string>
+    <string name="available_matchess">Available Matches</string>
 </resources>
