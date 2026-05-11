@@ -20,25 +20,36 @@ public class MainActivity extends AppCompatActivity {
         setupActionListeners();
     }
 
-    // UI Initializer
+    /**
+     * Initialize UI components from the XML layout
+     */
     private void initViewComponents() {
         btnRoleAdmin = findViewById(R.id.btn_role_admin);
         btnRoleFan = findViewById(R.id.btn_role_fan);
     }
 
-    // Click Handlers
+    /**
+     * Set up click listeners for the interactive elements
+     */
     private void setupActionListeners() {
+        // Navigate to Statistician Dashboard
         btnRoleAdmin.setOnClickListener(view -> navigateToDashboard("Statistician"));
+
+        // Show temporary message for Fan role
         btnRoleFan.setOnClickListener(view -> navigateToDashboard("Fan"));
     }
 
-    // Navigation Logic
+    /**
+     * Handle navigation logic based on the selected user role
+     * @param selectedRole The role chosen by the user
+     */
     private void navigateToDashboard(String selectedRole) {
-        if (selectedRole.equals("Statistician")) {
+        if ("Statistician".equals(selectedRole)) {
             Intent intent = new Intent(MainActivity.this, StatisticianActivity.class);
             startActivity(intent);
         } else {
-            Toast.makeText(this, "Accessing Fan Dashboard", Toast.LENGTH_SHORT).show();
+            // Placeholder for Fan/Spectator functionality
+            Toast.makeText(this, "Accessing Fan Dashboard...", Toast.LENGTH_SHORT).show();
         }
     }
 }
