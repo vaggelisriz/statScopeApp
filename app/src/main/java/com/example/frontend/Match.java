@@ -1,14 +1,13 @@
 package com.example.frontend;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-/**
- * Model class representing a Match.
- * The SerializedName values must match the JSON keys from your PHP script.
- */
-public class Match {
+public class Match implements Serializable {
 
-    // These names must match your database columns (home_team, away_team, etc.)
+    @SerializedName("id")
+    private int id;
+
     @SerializedName("home_team")
     private String homeTeam;
 
@@ -21,23 +20,22 @@ public class Match {
     @SerializedName("away_score")
     private int awayScore;
 
-    // Default constructor
-    public Match() {}
+    @SerializedName("home_team_id")
+    private int homeTeamId;
 
-    // Getters - Used by the Adapter to display data
-    public String getHomeTeam() {
-        return homeTeam;
-    }
+    @SerializedName("away_team_id")
+    private int awayTeamId;
 
-    public String getAwayTeam() {
-        return awayTeam;
-    }
+    @SerializedName("status")
+    private String status;
 
-    public int getHomeScore() {
-        return homeScore;
-    }
-
-    public int getAwayScore() {
-        return awayScore;
-    }
+    // Getters
+    public int getId() { return id; }
+    public String getHomeTeam() { return homeTeam; }
+    public String getAwayTeam() { return awayTeam; }
+    public int getHomeScore() { return homeScore; }
+    public int getAwayScore() { return awayScore; }
+    public int getHomeTeamId() { return homeTeamId; }
+    public int getAwayTeamId() { return awayTeamId; }
+    public String getStatus() { return status; }
 }

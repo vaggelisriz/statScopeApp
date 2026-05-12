@@ -12,8 +12,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LiveMatchesActivity extends AppCompatActivity {
 
@@ -27,14 +25,11 @@ public class LiveMatchesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_matches);
 
-        // UI Initialization
         btnBack = findViewById(R.id.btn_back_live);
         rvMatches = findViewById(R.id.rv_live_matches);
 
-        // Setup LayoutManager to enable vertical scrolling
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize with empty list to prevent "No adapter attached" error
         adapter = new MatchAdapter(new ArrayList<>());
         rvMatches.setAdapter(adapter);
 
@@ -44,13 +39,7 @@ public class LiveMatchesActivity extends AppCompatActivity {
     }
 
     private void fetchMatches() {
-        // Retrofit setup using Android Emulator's local IP address
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2/statScopeApp/backend/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         apiService.getAllMatches().enqueue(new Callback<List<Match>>() {
             @Override
@@ -58,7 +47,6 @@ public class LiveMatchesActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Match> matches = response.body();
 
-                    // Refresh adapter with new data from server
                     adapter = new MatchAdapter(matches);
                     rvMatches.setAdapter(adapter);
 

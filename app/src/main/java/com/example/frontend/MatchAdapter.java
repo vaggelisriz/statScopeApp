@@ -28,10 +28,15 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.MatchViewHol
     public void onBindViewHolder(@NonNull MatchViewHolder holder, int position) {
         Match match = matchList.get(position);
 
-        // Bind data to the views using getters from Match class
         holder.tvHomeName.setText(match.getHomeTeam());
         holder.tvAwayName.setText(match.getAwayTeam());
         holder.tvScore.setText(match.getHomeScore() + " - " + match.getAwayScore());
+
+        holder.itemView.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(v.getContext(), MatchDetailsActivity.class);
+            intent.putExtra("selected_match", match); // Στέλνουμε όλο τον αγώνα στην επόμενη οθόνη
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
