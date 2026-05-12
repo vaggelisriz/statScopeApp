@@ -3,7 +3,6 @@ package com.example.frontend;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         // Navigate to Statistician Dashboard
         btnRoleAdmin.setOnClickListener(view -> navigateToDashboard("Statistician"));
 
-        // Show temporary message for Fan role
+        // Navigate to Fan/Live Matches Screen
         btnRoleFan.setOnClickListener(view -> navigateToDashboard("Fan"));
     }
 
@@ -45,11 +44,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void navigateToDashboard(String selectedRole) {
         if ("Statistician".equals(selectedRole)) {
+            // Start the activity for adding/editing matches
             Intent intent = new Intent(MainActivity.this, StatisticianActivity.class);
             startActivity(intent);
         } else {
-            // Placeholder for Fan/Spectator functionality
-            Toast.makeText(this, "Accessing Fan Dashboard...", Toast.LENGTH_SHORT).show();
+            // Start the activity to view live match scores from the backend
+            Intent intent = new Intent(MainActivity.this, LiveMatchesActivity.class);
+            startActivity(intent);
         }
     }
 }

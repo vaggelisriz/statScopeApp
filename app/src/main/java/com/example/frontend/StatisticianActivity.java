@@ -1,5 +1,6 @@
 package com.example.frontend;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -39,10 +40,13 @@ public class StatisticianActivity extends AppCompatActivity {
         // Return to the previous screen (MainActivity)
         btnBack.setOnClickListener(v -> finish());
 
-        // Placeholder actions for the dashboard buttons
-        btnStartMatch.setOnClickListener(v ->
-                Toast.makeText(this, "Starting Live Match...", Toast.LENGTH_SHORT).show());
+        // Navigation to Live Matches screen
+        btnStartMatch.setOnClickListener(v -> {
+            Intent intent = new Intent(StatisticianActivity.this, LiveMatchesActivity.class);
+            startActivity(intent);
+        });
 
+        // Placeholders for other features
         btnManageTeams.setOnClickListener(v ->
                 Toast.makeText(this, "Opening Team Management...", Toast.LENGTH_SHORT).show());
 
