@@ -17,8 +17,8 @@ import retrofit2.Response;
 public class MatchDetailsActivity extends AppCompatActivity {
 
     private TextView tvScore, tvHomeName, tvAwayName;
-    private TextView tvHomeLineupTitle, tvAwayLineupTitle; // SOS: For dynamic lineup names
-    private ImageView ivHomeLogo, ivAwayLogo; // SOS: Required for team logos
+    private TextView tvHomeLineupTitle, tvAwayLineupTitle;
+    private ImageView ivHomeLogo, ivAwayLogo;
     private RecyclerView rvHome, rvAway;
     private PlayerAdapter homeAdapter, awayAdapter;
 
@@ -27,14 +27,13 @@ public class MatchDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_details);
 
-        // 1. UI Binding
+        // 1. UI Binding - Προσοχή: Χρησιμοποιούμε τα IDs που έχεις στο XML σου
         tvScore = findViewById(R.id.tv_detail_score);
         tvHomeName = findViewById(R.id.tv_detail_home);
         tvAwayName = findViewById(R.id.tv_detail_away);
         ivHomeLogo = findViewById(R.id.iv_detail_home_logo);
         ivAwayLogo = findViewById(R.id.iv_detail_away_logo);
 
-        // Dynamic Lineup Titles Binding
         tvHomeLineupTitle = findViewById(R.id.tv_home_lineup_title);
         tvAwayLineupTitle = findViewById(R.id.tv_away_lineup_title);
 
@@ -44,7 +43,7 @@ public class MatchDetailsActivity extends AppCompatActivity {
 
         // 2. RecyclerView Setup
         rvHome.setLayoutManager(new LinearLayoutManager(this));
-        rvHome.setNestedScrollingEnabled(false); // Smooth scrolling inside NestedScrollView
+        rvHome.setNestedScrollingEnabled(false);
         rvAway.setLayoutManager(new LinearLayoutManager(this));
         rvAway.setNestedScrollingEnabled(false);
 
@@ -52,16 +51,16 @@ public class MatchDetailsActivity extends AppCompatActivity {
         Match selectedMatch = (Match) getIntent().getSerializableExtra("selected_match");
 
         if (selectedMatch != null) {
-            // Set Score and Team Names
             tvScore.setText(selectedMatch.getHomeScore() + " - " + selectedMatch.getAwayScore());
             tvHomeName.setText(selectedMatch.getHomeTeam());
             tvAwayName.setText(selectedMatch.getAwayTeam());
 
-            // SOS: Set Dynamic Lineup Titles (Green part from XML)
-            tvHomeLineupTitle.setText(selectedMatch.getHomeTeam().toUpperCase());
-            tvAwayLineupTitle.setText(selectedMatch.getAwayTeam().toUpperCase());
+            // Μετατροπή σε κεφαλαία για τον τίτλο της ενδεκάδας
+            if (selectedMatch.getHomeTeam() != null)
+                tvHomeLineupTitle.setText(selectedMatch.getHomeTeam().toUpperCase());
+            if (selectedMatch.getAwayTeam() != null)
+                tvAwayLineupTitle.setText(selectedMatch.getAwayTeam().toUpperCase());
 
-            // SOS: Load Team Logos from GitHub URLs via Glide
             Glide.with(this)
                     .load(selectedMatch.getHomeLogo())
                     .placeholder(android.R.drawable.ic_menu_gallery)
@@ -77,13 +76,11 @@ public class MatchDetailsActivity extends AppCompatActivity {
             fetchPlayersForTeam(selectedMatch.getAwayTeamId(), false);
         }
 
-        // Back Navigation
-        btnBack.setOnClickListener(v -> finish());
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 
-    /**
-     * SOS: Fetch players from API and update the respective RecyclerView
-     */
     private void fetchPlayersForTeam(int teamId, boolean isHome) {
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
@@ -94,10 +91,11 @@ public class MatchDetailsActivity extends AppCompatActivity {
                     List<Player> players = response.body();
 
                     if (isHome) {
-                        homeAdapter = new PlayerAdapter(players);
+                        // Εδώ είναι η διόρθωση: Περνάμε null στον Listener
+                        homeAdapter = new PlayerAdapter(players, null);
                         rvHome.setAdapter(homeAdapter);
                     } else {
-                        awayAdapter = new PlayerAdapter(players);
+                        awayAdapter = new PlayerAdapter(players, null);
                         rvAway.setAdapter(awayAdapter);
                     }
                 } else {

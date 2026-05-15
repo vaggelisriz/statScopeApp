@@ -1,28 +1,30 @@
 package com.example.frontend;
 
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder> {
 
     private List<Player> players;
+    private List<Integer> selectedPlayerIds = new ArrayList<>();
+    private OnSelectionChangedListener listener;
 
-    public PlayerAdapter(List<Player> players) {
-        this.players = players;
+    public interface OnSelectionChangedListener {
+        void onSelectionChanged(int count);
+    }
+
+    public PlayerAdapter(List<Player> players, OnSelectionChangedListener listener) {
+        this.players = players != null ? players : new ArrayList<>();
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,66 +37,69 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     @Override
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
         Player player = players.get(position);
+
         holder.tvName.setText(player.getName());
         holder.tvPosition.setText(player.getPosition());
 
-        String photoUrl = player.getPhoto();
-        String finalUrl = "";
+        Glide.with(holder.itemView.getContext())
+                .load(player.getPhoto())
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .circleCrop()
+                .into(holder.ivPhoto);
 
-        if (photoUrl != null && !photoUrl.isEmpty()) {
-            // Έλεγχος αν είναι εξωτερικό link ή τοπικό path
-            if (photoUrl.startsWith("http")) {
-                finalUrl = photoUrl;
+        // SOS: Απενεργοποιούμε τον listener για να μην πυροδοτηθεί κατά το scroll
+        holder.cbStarter.setOnCheckedChangeListener(null);
+
+        // Ελέγχουμε αν το ID του παίκτη είναι στη λίστα των επιλεγμένων
+        holder.cbStarter.setChecked(selectedPlayerIds.contains(player.getId()));
+
+        // Χρησιμοποιούμε click listener σε ΟΛΟ το item για καλύτερο UX
+        holder.itemView.setOnClickListener(v -> {
+            int id = player.getId();
+            if (selectedPlayerIds.contains(id)) {
+                selectedPlayerIds.remove(Integer.valueOf(id));
             } else {
-                // Προσαρμογή για τοπικές εικόνες στον XAMPP (μέσω emulator 10.0.2.2)
-                finalUrl = "http://10.0.2.2/statScopeApp/backend/" + photoUrl.replace("../", "");
+                if (selectedPlayerIds.size() < 11) {
+                    selectedPlayerIds.add(id);
+                }
             }
-
-            Log.d("GLIDE_DEBUG", "Attempting to load: " + finalUrl);
-
-            Glide.with(holder.itemView.getContext())
-                    .load(finalUrl)
-                    .circleCrop()
-                    .timeout(30000) // Timeout 30 δευτερόλεπτα
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            Log.e("GLIDE_DEBUG", "Load FAILED for URL: " + model);
-                            if (e != null) {
-                                e.logRootCauses("GLIDE_DEBUG");
-                            }
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            Log.d("GLIDE_DEBUG", "Load SUCCESS for URL: " + model);
-                            return false;
-                        }
-                    })
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_menu_report_image)
-                    .into(holder.ivPhoto);
-        } else {
-            // Αν δεν υπάρχει καθόλου link, βάλε ένα default εικονίδιο
-            holder.ivPhoto.setImageResource(android.R.drawable.ic_menu_gallery);
-        }
+            notifyItemChanged(position); // Ενημέρωση μόνο αυτού του item
+            if (listener != null) {
+                listener.onSelectionChanged(selectedPlayerIds.size());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return players != null ? players.size() : 0;
+        return players.size();
     }
 
-    static class PlayerViewHolder extends RecyclerView.ViewHolder {
+    public List<Integer> getSelectedPlayerIds() {
+        return selectedPlayerIds;
+    }
+
+    // Μέθοδος για να αρχικοποιούμε τα IDs όταν ανοίγει το dialog
+    public void setSelectedPlayerIds(List<Integer> ids) {
+        this.selectedPlayerIds = new ArrayList<>(ids);
+        notifyDataSetChanged();
+    }
+
+    public void setOnSelectionChangedListener(OnSelectionChangedListener listener) {
+        this.listener = listener;
+    }
+
+    public static class PlayerViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPosition;
         ImageView ivPhoto;
+        CheckBox cbStarter;
 
         public PlayerViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_player_name);
             tvPosition = itemView.findViewById(R.id.tv_player_position);
             ivPhoto = itemView.findViewById(R.id.iv_player_photo);
+            cbStarter = itemView.findViewById(R.id.cb_is_starter);
         }
     }
 }

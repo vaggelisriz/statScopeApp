@@ -17,9 +17,11 @@ public interface ApiService {
     Call<List<Player>> getTeamPlayers(@Query("team_id") int teamId);
 
     @FormUrlEncoded
-    @POST("updateMatchStatus.php")
-    Call<Void> updateMatchStatus(
+    @POST("updateMatchStatusAndLineups.php")
+    Call<Void> updateMatchStatusAndLineups(
             @Field("match_id") int matchId,
-            @Field("status") String status
+            @Field("status") String status,
+            @Field("home_starters[]") List<Integer> homeStarters,
+            @Field("away_starters[]") List<Integer> awayStarters
     );
 }

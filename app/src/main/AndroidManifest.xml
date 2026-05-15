@@ -45,6 +45,10 @@
             android:name=".MatchLiveControlActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".LiveMatchActionsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
