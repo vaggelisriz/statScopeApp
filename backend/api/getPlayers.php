@@ -3,7 +3,7 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config/dbConnect.php';
 
-// Check if team_id is provided in the URL
+// Έλεγχος αν δόθηκε το team_id στο URL
 if (!isset($_GET['team_id']) || empty($_GET['team_id'])) {
     echo json_encode([]); 
     exit;
@@ -12,13 +12,12 @@ if (!isset($_GET['team_id']) || empty($_GET['team_id'])) {
 $team_id = (int)$_GET['team_id'];
 
 try {
-    // We MUST include 'photo' in the SELECT statement
-    $sql = "SELECT name, position, photo FROM players WHERE team_id = ?";
+    $sql = "SELECT id, name, position, photo FROM players WHERE team_id = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$team_id]);
     $players = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Return the list of players as JSON
+    // Επιστροφή της λίστας ως JSON
     echo json_encode($players, JSON_UNESCAPED_UNICODE);
 
 } catch (PDOException $e) {

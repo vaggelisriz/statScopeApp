@@ -1,0 +1,78 @@
+:root {
+    --bg-color: #01051a;
+    --primary-green: #00E676;
+    --text-white: #ffffff;
+    --text-gray: #D3D3D3;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.admin-container {
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo-container {
+    margin-bottom: 50px;
+}
+
+/* StatScope Logo Style */
+.logo-main {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+.logo-main span {
+    color: var(--primary-green);
+}
+
+.menu-label {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+/* Android-style Buttons */
+.stat-button {
+    display: block;
+    width: 100%;
+    height: 56px; /* Ίδιο με το android:layout_height="56dp" */
+    background-color: var(--primary-green);
+    color: var(--bg-color);
+    text-decoration: none;
+    line-height: 56px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.stat-button:hover {
+    background-color: #00c868;
+    transform: scale(1.02);
+}
+
+.stat-button.secondary {
+    background-color: var(--text-white);
+}
+
+.footer-text {
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--text-gray);
+    opacity: 0.5;
+}
