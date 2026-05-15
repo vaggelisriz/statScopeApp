@@ -2,8 +2,13 @@ package com.example.frontend;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -11,72 +16,99 @@ import retrofit2.Response;
 
 public class MatchDetailsActivity extends AppCompatActivity {
 
-    private TextView tvHomeTeam, tvAwayTeam, tvScore, tvHomeLineup, tvAwayLineup;
+    private TextView tvScore, tvHomeName, tvAwayName;
+    private TextView tvHomeLineupTitle, tvAwayLineupTitle; // SOS: For dynamic lineup names
+    private ImageView ivHomeLogo, ivAwayLogo; // SOS: Required for team logos
+    private RecyclerView rvHome, rvAway;
+    private PlayerAdapter homeAdapter, awayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_details);
 
-        // UI Initialization
-        tvHomeTeam = findViewById(R.id.tv_detail_home);
-        tvAwayTeam = findViewById(R.id.tv_detail_away);
+        // 1. UI Binding
         tvScore = findViewById(R.id.tv_detail_score);
-        tvHomeLineup = findViewById(R.id.tv_home_lineup);
-        tvAwayLineup = findViewById(R.id.tv_away_lineup);
+        tvHomeName = findViewById(R.id.tv_detail_home);
+        tvAwayName = findViewById(R.id.tv_detail_away);
+        ivHomeLogo = findViewById(R.id.iv_detail_home_logo);
+        ivAwayLogo = findViewById(R.id.iv_detail_away_logo);
 
-        // Get the match object from the previous screen
-        Match match = (Match) getIntent().getSerializableExtra("selected_match");
+        // Dynamic Lineup Titles Binding
+        tvHomeLineupTitle = findViewById(R.id.tv_home_lineup_title);
+        tvAwayLineupTitle = findViewById(R.id.tv_away_lineup_title);
 
-        if (match != null) {
-            tvHomeTeam.setText(match.getHomeTeam());
-            tvAwayTeam.setText(match.getAwayTeam());
-            tvScore.setText(match.getHomeScore() + " - " + match.getAwayScore());
+        rvHome = findViewById(R.id.rv_home_players);
+        rvAway = findViewById(R.id.rv_away_players);
+        ImageButton btnBack = findViewById(R.id.btn_back_details);
 
-            // Fetch players for both teams
-            fetchPlayers(match.getHomeTeamId(), tvHomeLineup);
-            fetchPlayers(match.getAwayTeamId(), tvAwayLineup);
+        // 2. RecyclerView Setup
+        rvHome.setLayoutManager(new LinearLayoutManager(this));
+        rvHome.setNestedScrollingEnabled(false); // Smooth scrolling inside NestedScrollView
+        rvAway.setLayoutManager(new LinearLayoutManager(this));
+        rvAway.setNestedScrollingEnabled(false);
+
+        // 3. Get Data from Intent
+        Match selectedMatch = (Match) getIntent().getSerializableExtra("selected_match");
+
+        if (selectedMatch != null) {
+            // Set Score and Team Names
+            tvScore.setText(selectedMatch.getHomeScore() + " - " + selectedMatch.getAwayScore());
+            tvHomeName.setText(selectedMatch.getHomeTeam());
+            tvAwayName.setText(selectedMatch.getAwayTeam());
+
+            // SOS: Set Dynamic Lineup Titles (Green part from XML)
+            tvHomeLineupTitle.setText(selectedMatch.getHomeTeam().toUpperCase());
+            tvAwayLineupTitle.setText(selectedMatch.getAwayTeam().toUpperCase());
+
+            // SOS: Load Team Logos from GitHub URLs via Glide
+            Glide.with(this)
+                    .load(selectedMatch.getHomeLogo())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .into(ivHomeLogo);
+
+            Glide.with(this)
+                    .load(selectedMatch.getAwayLogo())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .into(ivAwayLogo);
+
+            // 4. API Calls for Players
+            fetchPlayersForTeam(selectedMatch.getHomeTeamId(), true);
+            fetchPlayersForTeam(selectedMatch.getAwayTeamId(), false);
         }
+
+        // Back Navigation
+        btnBack.setOnClickListener(v -> finish());
     }
 
-    private void fetchPlayers(int teamId, TextView targetTextView) {
+    /**
+     * SOS: Fetch players from API and update the respective RecyclerView
+     */
+    private void fetchPlayersForTeam(int teamId, boolean isHome) {
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
-        // Calling getTeamPlayers which returns a simple List<Player>
         apiService.getTeamPlayers(teamId).enqueue(new Callback<List<Player>>() {
             @Override
             public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Player> players = response.body();
-                    StringBuilder sb = new StringBuilder();
 
-                    if (players.isEmpty()) {
-                        targetTextView.setText("No players found.");
+                    if (isHome) {
+                        homeAdapter = new PlayerAdapter(players);
+                        rvHome.setAdapter(homeAdapter);
                     } else {
-                        for (Player p : players) {
-                            sb.append(p.getName())
-                                    .append(" (")
-                                    .append(p.getPosition())
-                                    .append(")\n");
-                        }
-                        targetTextView.setText(sb.toString());
+                        awayAdapter = new PlayerAdapter(players);
+                        rvAway.setAdapter(awayAdapter);
                     }
                 } else {
-                    targetTextView.setText("Error: " + response.code());
+                    Log.e("API_ERROR", "Response unsuccessful for team ID: " + teamId);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Player>> call, Throwable t) {
-                Log.e("MatchDetails", "Network Error: " + t.getMessage());
-                targetTextView.setText("Connection failed.");
+                Log.e("API_FAILURE", "Failed to fetch players: " + t.getMessage());
             }
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Match implements Serializable {
-
     @SerializedName("id")
     private int id;
 
@@ -29,6 +28,13 @@ public class Match implements Serializable {
     @SerializedName("status")
     private String status;
 
+    // ΠΡΟΣΟΧΗ: Αυτά πρέπει να στέλνει η PHP
+    @SerializedName("home_logo")
+    private String homeLogo;
+
+    @SerializedName("away_logo")
+    private String awayLogo;
+
     // Getters
     public int getId() { return id; }
     public String getHomeTeam() { return homeTeam; }
@@ -38,4 +44,6 @@ public class Match implements Serializable {
     public int getHomeTeamId() { return homeTeamId; }
     public int getAwayTeamId() { return awayTeamId; }
     public String getStatus() { return status; }
+    public String getHomeLogo() { return homeLogo; }
+    public String getAwayLogo() { return awayLogo; }
 }

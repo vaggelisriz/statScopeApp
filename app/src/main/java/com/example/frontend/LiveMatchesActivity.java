@@ -30,6 +30,7 @@ public class LiveMatchesActivity extends AppCompatActivity {
 
         rvMatches.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize with empty list
         adapter = new MatchAdapter(new ArrayList<>());
         rvMatches.setAdapter(adapter);
 
@@ -45,12 +46,21 @@ public class LiveMatchesActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Match> matches = response.body();
+                    List<Match> allMatches = response.body();
+                    List<Match> liveMatchesOnly = new ArrayList<>();
 
-                    adapter = new MatchAdapter(matches);
+                    // Filter logic: keep only matches where status is "live"
+                    for (Match match : allMatches) {
+                        if (match.getStatus() != null && match.getStatus().equalsIgnoreCase("live")) {
+                            liveMatchesOnly.add(match);
+                        }
+                    }
+
+                    // Update adapter with filtered list
+                    adapter = new MatchAdapter(liveMatchesOnly);
                     rvMatches.setAdapter(adapter);
 
-                    Log.d(TAG, "Matches successfully loaded: " + matches.size());
+                    Log.d(TAG, "Filtered Live Matches: " + liveMatchesOnly.size());
                 } else {
                     Log.e(TAG, "Server Error: " + response.code());
                     Toast.makeText(LiveMatchesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();

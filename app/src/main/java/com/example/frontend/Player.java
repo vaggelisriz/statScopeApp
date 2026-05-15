@@ -9,11 +9,11 @@ public class Player {
     @SerializedName("position")
     private String position;
 
-    public String getName() {
-        return name;
-    }
+    @SerializedName("photo")
+    private String photo;
 
-    public String getPosition() {
-        return position;
-    }
+    // Getters
+    public String getName() { return name; }
+    public String getPosition() { return position; }
+    public String getPhoto() { return photo; }
 }
