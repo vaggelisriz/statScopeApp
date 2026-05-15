@@ -28,12 +28,13 @@ public class Match implements Serializable {
     @SerializedName("status")
     private String status;
 
-    // ΠΡΟΣΟΧΗ: Αυτά πρέπει να στέλνει η PHP
     @SerializedName("home_logo")
     private String homeLogo;
 
     @SerializedName("away_logo")
     private String awayLogo;
+    @SerializedName("championship_name")
+    private String championshipName;
 
     // Getters
     public int getId() { return id; }
@@ -46,4 +47,5 @@ public class Match implements Serializable {
     public String getStatus() { return status; }
     public String getHomeLogo() { return homeLogo; }
     public String getAwayLogo() { return awayLogo; }
+    public String getChampionshipName() { return championshipName; }
 }

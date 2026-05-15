@@ -37,6 +37,14 @@
             android:name=".MatchDetailsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ScheduledMatchesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".MatchLiveControlActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

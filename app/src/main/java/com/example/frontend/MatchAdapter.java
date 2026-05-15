@@ -1,6 +1,6 @@
 package com.example.frontend;
 
-import android.content.Intent;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,17 @@ import java.util.List;
 public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.MatchViewHolder> {
 
     private List<Match> matches;
+    private Context context;
+    private OnItemClickListener listener;
 
-    public MatchAdapter(List<Match> matches) {
+    public interface OnItemClickListener {
+        void onItemClick(Match match);
+    }
+
+    public MatchAdapter(Context context, List<Match> matches, OnItemClickListener listener) {
+        this.context = context;
         this.matches = matches;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,34 +43,21 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.MatchViewHol
         holder.tvScore.setText(match.getHomeScore() + " - " + match.getAwayScore());
         holder.tvStatus.setText(match.getStatus());
 
-        // Φόρτωση Home Logo
-        Glide.with(holder.itemView.getContext())
-                .load(match.getHomeLogo())
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.stat_notify_error)
-                .into(holder.ivHomeLogo);
+        // DISPLAY THE CHAMPIONSHIP NAME
+        // It takes the value we added in Match.java from the PHP JOIN
+        holder.tvChampionship.setText(match.getChampionshipName());
 
-        // Φόρτωση Away Logo
-        Glide.with(holder.itemView.getContext())
-                .load(match.getAwayLogo())
-                .placeholder(android.R.drawable.ic_menu_gallery)
-                .error(android.R.drawable.stat_notify_error)
-                .into(holder.ivAwayLogo);
+        Glide.with(context).load(match.getHomeLogo()).into(holder.ivHomeLogo);
+        Glide.with(context).load(match.getAwayLogo()).into(holder.ivAwayLogo);
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), MatchDetailsActivity.class);
-            intent.putExtra("selected_match", match);
-            v.getContext().startActivity(intent);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(match));
     }
 
     @Override
-    public int getItemCount() {
-        return matches != null ? matches.size() : 0;
-    }
+    public int getItemCount() { return matches != null ? matches.size() : 0; }
 
     static class MatchViewHolder extends RecyclerView.ViewHolder {
-        TextView tvHomeName, tvAwayName, tvScore, tvStatus;
+        TextView tvHomeName, tvAwayName, tvScore, tvStatus, tvChampionship;
         ImageView ivHomeLogo, ivAwayLogo;
 
         public MatchViewHolder(@NonNull View itemView) {
@@ -71,6 +66,8 @@ public class MatchAdapter extends RecyclerView.Adapter<MatchAdapter.MatchViewHol
             tvAwayName = itemView.findViewById(R.id.tv_away_name);
             tvScore = itemView.findViewById(R.id.tv_score);
             tvStatus = itemView.findViewById(R.id.tv_status);
+            // NEW: Link the Championship TextView
+            tvChampionship = itemView.findViewById(R.id.tv_championship_name);
             ivHomeLogo = itemView.findViewById(R.id.iv_home_logo);
             ivAwayLogo = itemView.findViewById(R.id.iv_away_logo);
         }

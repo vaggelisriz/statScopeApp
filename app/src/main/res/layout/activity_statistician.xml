@@ -6,15 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#01051a"
-    android:padding="24dp"
+    android:padding="16dp"
     tools:context=".StatisticianActivity">
 
     <ImageButton
         android:id="@+id/btn_back_dashboard"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="4dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Back to selection"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_back_arrow"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,12 +27,12 @@
         android:id="@+id/tv_dashboard_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="sans-serif-condensed-light"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="sans-serif-condensed"
         android:text="STATISTICIAN DASHBOARD"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/btn_back_dashboard"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,85 +41,43 @@
 
     <View
         android:id="@+id/accent_line"
-        android:layout_width="50dp"
+        android:layout_width="60dp"
         android:layout_height="3dp"
         android:layout_marginTop="2dp"
         android:background="#00E676"
         app:layout_constraintStart_toStartOf="@+id/tv_dashboard_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_dashboard_title" />
 
-    <TextView
-        android:id="@+id/tv_label_matchday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+    <Button
+        android:id="@+id/btn_set_match_live"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="60dp"
+        android:backgroundTint="#00E676"
         android:fontFamily="sans-serif-condensed"
-        android:letterSpacing="0.1"
-        android:text="MATCH DAY"
-        android:textColor="#555d8a"
-        android:textSize="14sp"
+        android:text="SET MATCH LIVE"
+        android:textColor="#01051a"
+        android:textStyle="bold"
+        app:cornerRadius="4dp"
+        app:layout_constraintWidth_percent="0.85"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accent_line" />
 
     <Button
-        android:id="@+id/btn_start_match"
+        android:id="@+id/btn_manage_matches"
         android:layout_width="0dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#00E676"
-        android:fontFamily="sans-serif-condensed"
-        android:text="START LIVE MATCH"
-        android:textColor="#01051a"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_label_matchday" />
-
-    <TextView
-        android:id="@+id/tv_label_admin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-condensed"
-        android:letterSpacing="0.1"
-        android:text="ADMINISTRATION"
-        android:textColor="#555d8a"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_start_match" />
-
-    <Button
-        android:id="@+id/btn_manage_teams"
-        android:layout_width="0dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="sans-serif-condensed"
-        android:text="TEAMS &amp; PLAYERS"
-        android:textColor="#01051a"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_label_admin" />
-
-    <Button
-        android:id="@+id/btn_manage_championships"
-        android:layout_width="0dp"
-        android:layout_height="65dp"
+        android:layout_height="56dp"
         android:layout_marginTop="12dp"
         android:backgroundTint="#FFFFFF"
         android:fontFamily="sans-serif-condensed"
-        android:text="CHAMPIONSHIP SETUP"
+        android:text="MANAGE LIVE MATCHES"
         android:textColor="#01051a"
-        android:textSize="15sp"
         android:textStyle="bold"
-        app:cornerRadius="8dp"
+        app:cornerRadius="4dp"
+        app:layout_constraintWidth_percent="0.85"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_manage_teams" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_set_match_live" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

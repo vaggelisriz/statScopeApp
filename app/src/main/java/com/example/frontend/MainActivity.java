@@ -3,6 +3,7 @@ package com.example.frontend;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // Navigate to Statistician Dashboard
         btnRoleAdmin.setOnClickListener(view -> navigateToDashboard("Statistician"));
 
-        // Navigate to Fan/Live Matches Screen
+        // Navigate to Fan (Currently shows a message)
         btnRoleFan.setOnClickListener(view -> navigateToDashboard("Fan"));
     }
 
@@ -44,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void navigateToDashboard(String selectedRole) {
         if ("Statistician".equals(selectedRole)) {
-            // Start the activity for adding/editing matches
+            // Άνοιγμα του Statistician Dashboard
             Intent intent = new Intent(MainActivity.this, StatisticianActivity.class);
             startActivity(intent);
-        } else {
-            // Start the activity to view live match scores from the backend
-            Intent intent = new Intent(MainActivity.this, LiveMatchesActivity.class);
-            startActivity(intent);
+        }
+        else if ("Fan".equals(selectedRole)) {
+            // Εμφάνιση μηνύματος αφού δεν υπάρχει ακόμα οθόνη
+            Toast.makeText(MainActivity.this, "Fan mode coming soon!", Toast.LENGTH_SHORT).show();
         }
     }
 }

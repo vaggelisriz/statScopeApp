@@ -35,7 +35,11 @@
                 android:layout_marginTop="4dp"
                 android:text="Home"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -46,11 +50,22 @@
             android:layout_marginHorizontal="16dp">
 
             <TextView
+                android:id="@+id/tv_championship_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHAMPIONSHIP"
+                android:textColor="#00E676"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
                 android:id="@+id/tv_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0 - 0"
-                android:textColor="#00E676"
+                android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -60,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="LIVE"
                 android:textColor="#9E9E9E"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,7 +99,11 @@
                 android:layout_marginTop="4dp"
                 android:text="Away"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
         </LinearLayout>
 
     </LinearLayout>
