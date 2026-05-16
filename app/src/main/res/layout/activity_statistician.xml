@@ -16,12 +16,14 @@
         android:layout_marginStart="-8dp"
         android:layout_marginTop="4dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back to Main Dashboard"
         android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_back_arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#00E676" />
+        app:tint="#00E676"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/tv_dashboard_title"
@@ -37,7 +39,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/btn_back_dashboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_back_dashboard"
-        app:layout_constraintTop_toTopOf="@+id/btn_back_dashboard" />
+        app:layout_constraintTop_toTopOf="@+id/btn_back_dashboard"
+        tools:ignore="HardcodedText" />
 
     <View
         android:id="@+id/accent_line"
@@ -48,36 +51,140 @@
         app:layout_constraintStart_toStartOf="@+id/tv_dashboard_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_dashboard_title" />
 
-    <Button
-        android:id="@+id/btn_set_match_live"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_set_match"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="60dp"
-        android:backgroundTint="#00E676"
-        android:fontFamily="sans-serif-condensed"
-        android:text="SET MATCH LIVE"
-        android:textColor="#01051a"
-        android:textStyle="bold"
-        app:cornerRadius="4dp"
-        app:layout_constraintWidth_percent="0.85"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        app:cardBackgroundColor="#131833"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        app:layout_constraintWidth_percent="0.95"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accent_line" />
+        app:layout_constraintTop_toBottomOf="@+id/accent_line">
 
-    <Button
-        android:id="@+id/btn_manage_matches"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:minHeight="115dp">
+
+            <TextView
+                android:id="@+id/tv_title_set_match"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Set Match Live"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btn_set_match_live"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_set_match_live_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="16dp"
+                android:text="Select a match, configure lineups, and start the game live."
+                android:textColor="#888888"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toStartOf="@+id/btn_set_match_live"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title_set_match"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btn_set_match_live"
+                android:layout_width="85dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#00E676"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="0dp"
+                android:text="SETUP"
+                android:textColor="#01051a"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                app:cornerRadius="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_manage_matches"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="sans-serif-condensed"
-        android:text="MANAGE LIVE MATCHES"
-        android:textColor="#01051a"
-        android:textStyle="bold"
-        app:cornerRadius="4dp"
-        app:layout_constraintWidth_percent="0.85"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:cardBackgroundColor="#131833"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp"
+        app:layout_constraintWidth_percent="0.95"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_set_match_live" />
+        app:layout_constraintTop_toBottomOf="@+id/card_set_match">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:minHeight="115dp">
+
+            <TextView
+                android:id="@+id/tv_title_manage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Manage Live Matches"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btn_manage_matches"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_manage_matches_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="16dp"
+                android:text="Track stats, fouls, goals, and events for ongoing games."
+                android:textColor="#888888"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toStartOf="@+id/btn_manage_matches"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title_manage"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btn_manage_matches"
+                android:layout_width="85dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#FFFFFF"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="0dp"
+                android:text="VIEW"
+                android:textColor="#01051a"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                app:cornerRadius="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

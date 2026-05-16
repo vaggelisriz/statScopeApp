@@ -17,45 +17,29 @@ public class Player implements Serializable {
     @SerializedName("photo")
     private String photo;
 
-    // Constructor
-    public Player(int id, String name, String position, String photo) {
-        this.id = id;
-        this.name = name;
-        this.position = position;
-        this.photo = photo;
-    }
+    @SerializedName("number")
+    private String number;
 
-    // Getters
-    public int getId() {
-        return id;
-    }
+    @SerializedName("team_id")
+    private int teamId;
 
-    public String getName() {
-        return name;
-    }
+    // Runtime flags — Ορίζονται locally στην Activity
+    private boolean isStarter = false;
+    private boolean isSubstituted = false;
 
-    public String getPosition() {
-        return position;
-    }
+    // ─── Getters ────────────────────────────────────────────────────────────
+    public int getId()         { return id; }
+    public String getName()    { return name; }
+    public String getPosition(){ return position; }
+    public String getPhoto()   { return photo; }
+    public String getNumber()  { return number; }
+    public int getTeamId()     { return teamId; }
+    public boolean isStarter() { return isStarter; }
+    public boolean isSubstituted() { return isSubstituted; }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    // Setters (αν χρειάζονται)
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+    // ─── Setters ─────────────────────────────────────────────────────────────
+    public void setId(int id)            { this.id = id; }
+    public void setStarter(boolean s)    { this.isStarter = s; }
+    public void setTeamId(int teamId)    { this.teamId = teamId; }
+    public void setSubstituted(boolean substituted) { this.isSubstituted = substituted; }
 }

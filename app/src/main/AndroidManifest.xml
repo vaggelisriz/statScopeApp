@@ -49,6 +49,10 @@
             android:name=".LiveMatchActionsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".UpdateLineupsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

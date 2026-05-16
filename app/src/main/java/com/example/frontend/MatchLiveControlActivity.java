@@ -63,8 +63,6 @@ public class MatchLiveControlActivity extends AppCompatActivity {
         btnStartLive = findViewById(R.id.btn_start_live);
         btnSelectHome = findViewById(R.id.btn_select_home);
         btnSelectAway = findViewById(R.id.btn_select_away);
-
-        // Τα νέα TextViews για το status
         tvHomeStatus = findViewById(R.id.tv_home_status);
         tvAwayStatus = findViewById(R.id.tv_away_status);
     }
@@ -111,7 +109,7 @@ public class MatchLiveControlActivity extends AppCompatActivity {
                         } else {
                             awaySelectedIds = new ArrayList<>(adapter.getSelectedPlayerIds());
                         }
-                        updateStatusTexts(); // Ενημέρωση των κειμένων κάτω από τα κουμπιά
+                        updateStatusTexts();
                         checkOverallStartButton();
                         dialog.dismiss();
                     });
@@ -134,22 +132,20 @@ public class MatchLiveControlActivity extends AppCompatActivity {
     }
 
     private void updateStatusTexts() {
-        // Home status text
         if (homeSelectedIds.size() == 11) {
             tvHomeStatus.setText("Lineup added successfully");
-            tvHomeStatus.setTextColor(Color.parseColor("#00E676")); // Πράσινο
+            tvHomeStatus.setTextColor(Color.parseColor("#00E676"));
         } else {
             tvHomeStatus.setText("Please add players");
-            tvHomeStatus.setTextColor(Color.parseColor("#888888")); // Γκρι
+            tvHomeStatus.setTextColor(Color.parseColor("#888888"));
         }
 
-        // Away status text
         if (awaySelectedIds.size() == 11) {
             tvAwayStatus.setText("Lineup added successfully");
-            tvAwayStatus.setTextColor(Color.parseColor("#00E676")); // Πράσινο
+            tvAwayStatus.setTextColor(Color.parseColor("#00E676"));
         } else {
             tvAwayStatus.setText("Please add players");
-            tvAwayStatus.setTextColor(Color.parseColor("#888888")); // Γκρι
+            tvAwayStatus.setTextColor(Color.parseColor("#888888"));
         }
     }
 
@@ -158,20 +154,18 @@ public class MatchLiveControlActivity extends AppCompatActivity {
         btnStartLive.setEnabled(ready);
         btnStartLive.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(ready ? "#00E676" : "#444444")));
         btnStartLive.setTextColor(Color.parseColor(ready ? "#01051a" : "#FFFFFF"));
-
-        if (ready) {
-            btnStartLive.setText("START MATCH");
-        } else {
-            btnStartLive.setText("WAITING FOR LINEUPS");
-        }
+        btnStartLive.setText(ready ? "START MATCH" : "WAITING FOR LINEUPS");
     }
 
+    // ✅ ΔΙΟΡΘΩΣΗ: Callback<Void> → Callback<StatusResponse>
+    // Το ApiService.updateMatchStatusAndLineups() επιστρέφει Call<StatusResponse>,
+    // οπότε το Callback πρέπει να έχει τον ίδιο generic type.
     private void updateStatusToLive(int matchId, List<Integer> home, List<Integer> away) {
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
-        apiService.updateMatchStatusAndLineups(matchId, "live", home, away).enqueue(new Callback<Void>() {
+        apiService.updateMatchStatusAndLineups(matchId, "live", home, away).enqueue(new Callback<StatusResponse>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     Toast.makeText(MatchLiveControlActivity.this, "Match is now LIVE!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
@@ -179,7 +173,8 @@ public class MatchLiveControlActivity extends AppCompatActivity {
                     Toast.makeText(MatchLiveControlActivity.this, "Server Error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
-            @Override public void onFailure(Call<Void> call, Throwable t) {
+            @Override
+            public void onFailure(Call<StatusResponse> call, Throwable t) {
                 Toast.makeText(MatchLiveControlActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
         });

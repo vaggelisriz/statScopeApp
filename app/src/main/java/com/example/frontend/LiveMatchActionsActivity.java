@@ -33,17 +33,20 @@ public class LiveMatchActionsActivity extends AppCompatActivity {
         // 1. Back Button - Επιστροφή στην προηγούμενη οθόνη
         findViewById(R.id.btn_back_actions).setOnClickListener(v -> finish());
 
-        // 2. Κουμπί για Διαχείριση Ενδεκάδας (Αλλαγές)
+        // 2. Κουμπί για Διαχείριση Ενδεκάδας (Αλλαγές) - ΕΝΕΡΓΟΠΟΙΗΘΗΚΕ 🚀
         btnLineups.setOnClickListener(v -> {
-            // Εδώ θα ανοίγεις την οθόνη για τις αλλαγές (Substitutions)
-            // Intent intent = new Intent(this, UpdateLineupsActivity.class);
-            // intent.putExtra("selected_match", selectedMatch);
-            // startActivity(intent);
+            Intent intent = new Intent(LiveMatchActionsActivity.this, UpdateLineupsActivity.class);
+            intent.putExtra(UpdateLineupsActivity.EXTRA_MATCH_ID,     selectedMatch.getId());
+            intent.putExtra(UpdateLineupsActivity.EXTRA_HOME_TEAM_ID, selectedMatch.getHomeTeamId());
+            intent.putExtra(UpdateLineupsActivity.EXTRA_AWAY_TEAM_ID, selectedMatch.getAwayTeamId());
+            intent.putExtra(UpdateLineupsActivity.EXTRA_HOME_TEAM,    selectedMatch.getHomeTeam());
+            intent.putExtra(UpdateLineupsActivity.EXTRA_AWAY_TEAM,    selectedMatch.getAwayTeam());
+            startActivity(intent);
         });
 
         // 3. Κουμπί για Προσθήκη Στατιστικών (Γκολ, Κάρτες κλπ)
         btnStats.setOnClickListener(v -> {
-            // Εδώ θα ανοίγεις την οθόνη των στατιστικών
+            // Εδώ θα ανοίγεις την οθόνη των στατιστικών (όταν τη φτιάξεις)
             // Intent intent = new Intent(this, AddStatisticsActivity.class);
             // intent.putExtra("selected_match", selectedMatch);
             // startActivity(intent);
