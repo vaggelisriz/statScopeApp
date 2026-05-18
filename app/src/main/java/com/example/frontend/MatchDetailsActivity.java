@@ -92,10 +92,10 @@ public class MatchDetailsActivity extends AppCompatActivity {
 
                     if (isHome) {
                         // Εδώ είναι η διόρθωση: Περνάμε null στον Listener
-                        homeAdapter = new PlayerAdapter(players, null);
+                        homeAdapter = new PlayerAdapter(players);
                         rvHome.setAdapter(homeAdapter);
                     } else {
-                        awayAdapter = new PlayerAdapter(players, null);
+                        awayAdapter = new PlayerAdapter(players);
                         rvAway.setAdapter(awayAdapter);
                     }
                 } else {

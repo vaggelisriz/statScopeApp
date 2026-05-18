@@ -11,8 +11,10 @@ if (!isset($_GET['team_id']) || empty($_GET['team_id'])) {
 
 $team_id = (int)$_GET['team_id'];
 
+
 try {
-    $sql = "SELECT id, name, position, photo FROM players WHERE team_id = ?";
+    // ΠΡΟΣΘΕΣΑΜΕ: age, number στο SELECT
+    $sql = "SELECT id, name, position, photo, age, number FROM players WHERE team_id = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$team_id]);
     $players = $stmt->fetchAll(PDO::FETCH_ASSOC);
