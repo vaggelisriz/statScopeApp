@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    xmlns:tools2="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#01051a"
+    android:padding="16dp"
+    tools:context=".FanActivity">
+
+    <ImageButton
+        android:id="@+id/btn_back_dashboard"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back to Main Dashboard"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#00E676"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_dashboard_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="FAN DASHBOARD"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back_dashboard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_back_dashboard"
+        app:layout_constraintTop_toTopOf="@+id/btn_back_dashboard"
+        tools:ignore="HardcodedText" />
+
+    <View
+        android:id="@+id/accent_line"
+        android:layout_width="60dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="2dp"
+        android:background="#00E676"
+        app:layout_constraintStart_toStartOf="@+id/tv_dashboard_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dashboard_title" />
+
+    <TextView
+        android:id="@+id/tv_championships_header"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="40dp"
+        android:text="CHAMPIONSHIPS"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:backgroundTint="#01051a"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accent_line"
+        app:layout_constraintWidth_percent="0.85" />
+
+    <ListView
+        android:id="@+id/lv_championships_options"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        android:background="#0a1128"
+        app:layout_constraintEnd_toEndOf="@+id/tv_championships_header"
+        app:layout_constraintStart_toStartOf="@+id/tv_championships_header"
+        app:layout_constraintTop_toBottomOf="@+id/tv_championships_header" />
+
+    <Spinner
+        android:id="@+id/spinner_matches"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#00E676"
+        android:entries="@array/matches_title"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lv_championships_options"
+        app:layout_constraintWidth_percent="0.85" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

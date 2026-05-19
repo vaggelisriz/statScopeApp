@@ -20,6 +20,9 @@ public class Player implements Serializable {
     @SerializedName("number")
     private String number;
 
+    @SerializedName("age")
+    private int age;
+
     @SerializedName("team_id")
     private int teamId;
 
@@ -34,6 +37,8 @@ public class Player implements Serializable {
     public String getPhoto()   { return photo; }
     public String getNumber()  { return number; }
     public int getTeamId()     { return teamId; }
+    public int getAge()     { return age; }
+
     public boolean isStarter() { return isStarter; }
     public boolean isSubstituted() { return isSubstituted; }
 

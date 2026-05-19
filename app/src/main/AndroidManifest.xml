@@ -53,6 +53,21 @@
             android:name=".UpdateLineupsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".FanActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChampionshipActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".FanMatchDetailsActivity"
+            android:exported="false" />
+
+        <activity android:name=".PlayerDetailsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

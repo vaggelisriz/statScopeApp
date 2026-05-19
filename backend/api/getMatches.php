@@ -3,9 +3,10 @@ require_once '../config/dbConnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-    // Added championship name join and select
+    // ΠΡΟΣΘΕΘΗΚΕ ΤΟ m.championship_id ΣΤΟ SELECT
     $sql = "SELECT 
                 m.id, 
+                m.championship_id, 
                 m.match_round, 
                 t1.name AS home_team, 
                 t1.logo AS home_logo, 

@@ -17,6 +17,9 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     private List<Player> players;
     private List<Integer> selectedPlayerIds = new ArrayList<>();
     private OnSelectionChangedListener listener;
+    private boolean isReadOnly = false;
+
+    private String teamName;
 
     public interface OnSelectionChangedListener {
         void onSelectionChanged(int count);
@@ -25,6 +28,18 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     public PlayerAdapter(List<Player> players, OnSelectionChangedListener listener) {
         this.players = players != null ? players : new ArrayList<>();
         this.listener = listener;
+        this.isReadOnly = false;
+    }
+
+    public PlayerAdapter(List<Player> players) {
+        this.players = players != null ? players : new ArrayList<>();
+        this.isReadOnly = true;
+    }
+
+    public PlayerAdapter(List<Player> players, String teamName) {
+        this.players = players != null ? players : new ArrayList<>();
+        this.teamName = teamName;
+        this.isReadOnly = true;
     }
 
     @NonNull
@@ -47,27 +62,46 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
                 .circleCrop()
                 .into(holder.ivPhoto);
 
-        // SOS: Απενεργοποιούμε τον listener για να μην πυροδοτηθεί κατά το scroll
-        holder.cbStarter.setOnCheckedChangeListener(null);
+        if (isReadOnly) {
+            // Λειτουργία Φιλάθλου: Κρύβουμε το CheckBox και ενεργοποιούμε το άμεσο κλικ
+            holder.cbStarter.setVisibility(View.GONE);
 
-        // Ελέγχουμε αν το ID του παίκτη είναι στη λίστα των επιλεγμένων
-        holder.cbStarter.setChecked(selectedPlayerIds.contains(player.getId()));
+            holder.itemView.setOnClickListener(v -> {
+                android.content.Context context = holder.itemView.getContext();
+                android.content.Intent intent = new android.content.Intent(context, PlayerDetailsActivity.class);
 
-        // Χρησιμοποιούμε click listener σε ΟΛΟ το item για καλύτερο UX
-        holder.itemView.setOnClickListener(v -> {
-            int id = player.getId();
-            if (selectedPlayerIds.contains(id)) {
-                selectedPlayerIds.remove(Integer.valueOf(id));
-            } else {
-                if (selectedPlayerIds.size() < 11) {
-                    selectedPlayerIds.add(id);
+                // Περνάμε όλα τα απαραίτητα στοιχεία του παίκτη στο Intent
+                intent.putExtra("PLAYER_ID", player.getId());
+                intent.putExtra("PLAYER_NAME", player.getName());
+                intent.putExtra("PLAYER_POSITION", player.getPosition());
+                intent.putExtra("PLAYER_PHOTO", player.getPhoto());
+                intent.putExtra("PLAYER_NUMBER", player.getNumber());
+                intent.putExtra("PLAYER_AGE", player.getAge());
+                intent.putExtra("PLAYER_TEAM_NAME", teamName);
+
+                context.startActivity(intent);
+            });
+        } else {
+            // Λειτουργία Επεξεργασίας (Ο αρχικός κώδικας της συνεργάτιδάς σου)
+            holder.cbStarter.setVisibility(View.VISIBLE);
+            holder.cbStarter.setOnCheckedChangeListener(null);
+            holder.cbStarter.setChecked(selectedPlayerIds.contains(player.getId()));
+
+            holder.itemView.setOnClickListener(v -> {
+                int id = player.getId();
+                if (selectedPlayerIds.contains(id)) {
+                    selectedPlayerIds.remove(Integer.valueOf(id));
+                } else {
+                    if (selectedPlayerIds.size() < 11) {
+                        selectedPlayerIds.add(id);
+                    }
                 }
-            }
-            notifyItemChanged(position); // Ενημέρωση μόνο αυτού του item
-            if (listener != null) {
-                listener.onSelectionChanged(selectedPlayerIds.size());
-            }
-        });
+                notifyItemChanged(position);
+                if (listener != null) {
+                    listener.onSelectionChanged(selectedPlayerIds.size());
+                }
+            });
+        }
     }
 
     @Override

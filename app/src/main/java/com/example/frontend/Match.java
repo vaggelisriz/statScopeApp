@@ -7,6 +7,10 @@ public class Match implements Serializable {
     @SerializedName("id")
     private int id;
 
+    // Προσθήκη του ID πρωταθλήματος για το φιλτράρισμα
+    @SerializedName("championship_id")
+    private int championshipId;
+
     @SerializedName("home_team")
     private String homeTeam;
 
@@ -33,11 +37,30 @@ public class Match implements Serializable {
 
     @SerializedName("away_logo")
     private String awayLogo;
+
     @SerializedName("championship_name")
     private String championshipName;
 
+    // ΚΑΤΑΣΚΕΥΑΣΤΗΣ (Constructor) για τον OkHttpHandler
+    public Match(int id, int championshipId, String homeTeam, String awayTeam, int homeScore, int awayScore,
+                 int homeTeamId, int awayTeamId, String status, String homeLogo, String awayLogo, String championshipName) {
+        this.id = id;
+        this.championshipId = championshipId;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+        this.homeTeamId = homeTeamId;
+        this.awayTeamId = awayTeamId;
+        this.status = status;
+        this.homeLogo = homeLogo;
+        this.awayLogo = awayLogo;
+        this.championshipName = championshipName;
+    }
+
     // Getters
     public int getId() { return id; }
+    public int getChampionshipId() { return championshipId; } // Νέος Getter
     public String getHomeTeam() { return homeTeam; }
     public String getAwayTeam() { return awayTeam; }
     public int getHomeScore() { return homeScore; }
