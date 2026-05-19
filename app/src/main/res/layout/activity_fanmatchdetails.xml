@@ -11,7 +11,7 @@
         android:layout_height="48dp"
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_back_arrow"
+        android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#00E676" />
@@ -91,8 +91,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:paddingHorizontal="8dp"
-                        android:paddingVertical="2dp"
-                        android:background="@drawable/live_badge_bg" />
+                        android:paddingVertical="2dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -141,7 +140,6 @@
                 android:padding="14dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv_home_header_title"
@@ -178,7 +176,6 @@
                 android:padding="14dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv_away_header_title"
@@ -204,7 +201,6 @@
                 android:layout_marginTop="4dp"
                 android:nestedScrollingEnabled="false"
                 android:visibility="gone" />
-
 
             <View
                 android:layout_width="match_parent"
@@ -240,7 +236,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="14"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="start"
@@ -258,7 +254,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="9"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="end"
@@ -275,7 +271,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="340"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="start"
@@ -293,7 +289,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="410"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="end"
@@ -310,7 +306,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="8"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="start"
@@ -328,7 +324,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="12"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="end"
@@ -338,13 +334,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
                     <TextView
                         android:id="@+id/tv_stat_home_cards"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="2"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="start"
@@ -362,7 +359,146 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="end"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+                    <TextView
+                        android:id="@+id/tv_stat_home_assists"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="start"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Assists"
+                        android:textColor="#8A92B2"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+                    <TextView
+                        android:id="@+id/tv_stat_away_assists"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="end"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+                    <TextView
+                        android:id="@+id/tv_stat_home_tackles"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="start"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Tackles"
+                        android:textColor="#8A92B2"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+                    <TextView
+                        android:id="@+id/tv_stat_away_tackles"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="end"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+                    <TextView
+                        android:id="@+id/tv_stat_home_corners"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="start"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Corners"
+                        android:textColor="#8A92B2"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+                    <TextView
+                        android:id="@+id/tv_stat_away_corners"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="end"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tv_stat_home_mistakes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:gravity="start"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Mistakes"
+                        android:textColor="#8A92B2"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+                    <TextView
+                        android:id="@+id/tv_stat_away_mistakes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:gravity="end"

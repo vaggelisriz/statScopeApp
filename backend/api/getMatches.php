@@ -2,8 +2,11 @@
 require_once '../config/dbConnect.php';
 header('Content-Type: application/json; charset=utf-8');
 
+// Διαβάζουμε αν ο πελάτης ζήτησε συγκεκριμένο status (π.χ. ?status=live)
+$status = isset($_GET['status']) ? $_GET['status'] : null;
+
 try {
-    // ΠΡΟΣΘΕΘΗΚΕ ΤΟ m.championship_id ΣΤΟ SELECT
+    // Βασικό query
     $sql = "SELECT 
                 m.id, 
                 m.championship_id, 
@@ -21,13 +24,25 @@ try {
             FROM matches m
             JOIN teams t1 ON m.home_team_id = t1.id
             JOIN teams t2 ON m.away_team_id = t2.id
-            JOIN championships c ON m.championship_id = c.id
-            ORDER BY m.match_round ASC";
+            JOIN championships c ON m.championship_id = c.id";
 
-    $stmt = $pdo->query($sql);
+    // ΑΛΛΑΓΗ: Αν ζητήθηκε status, φιλτράρουμε στη βάση (π.χ. WHERE m.status = 'live')
+    if ($status !== null) {
+        $sql .= " WHERE m.status = :status";
+    }
+
+    $sql .= " ORDER BY m.match_round ASC";
+
+    $stmt = $pdo->prepare($sql);
+    
+    if ($status !== null) {
+        $stmt->execute(['status' => $status]);
+    } else {
+        $stmt->execute();
+    }
+
     $matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Return data in JSON
     echo json_encode($matches, JSON_UNESCAPED_UNICODE);
 
 } catch (PDOException $e) {

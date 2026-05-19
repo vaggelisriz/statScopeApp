@@ -1,5 +1,6 @@
 package com.example.frontend;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,10 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private TextView tvStatHomePasses, tvStatAwayPasses;
     private TextView tvStatHomeFouls, tvStatAwayFouls;
     private TextView tvStatHomeCards, tvStatAwayCards;
+    private TextView tvStatHomeAssists, tvStatAwayAssists;
+    private TextView tvStatHomeTackles, tvStatAwayTackles;
+    private TextView tvStatHomeCorners, tvStatAwayCorners;
+    private TextView tvStatHomeMistakes, tvStatAwayMistakes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         ivHomeArrow = findViewById(R.id.iv_home_arrow);
         ivAwayArrow = findViewById(R.id.iv_away_arrow);
 
-        // 3. Σύνδεση των νέων Views για τα Stats
+        // 3. Σύνδεση όλων των Views για τα Stats (16 συνολικά FindViewById)
         tvStatHomeShots = findViewById(R.id.tv_stat_home_shots);
         tvStatAwayShots = findViewById(R.id.tv_stat_away_shots);
         tvStatHomePasses = findViewById(R.id.tv_stat_home_passes);
@@ -69,9 +74,17 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         tvStatHomeCards = findViewById(R.id.tv_stat_home_cards);
         tvStatAwayCards = findViewById(R.id.tv_stat_away_cards);
 
+        tvStatHomeAssists = findViewById(R.id.tv_stat_home_assists);
+        tvStatAwayAssists = findViewById(R.id.tv_stat_away_assists);
+        tvStatHomeTackles = findViewById(R.id.tv_stat_home_tackles);
+        tvStatAwayTackles = findViewById(R.id.tv_stat_away_tackles);
+        tvStatHomeCorners = findViewById(R.id.tv_stat_home_corners);
+        tvStatAwayCorners = findViewById(R.id.tv_stat_away_corners);
+        tvStatHomeMistakes = findViewById(R.id.tv_stat_home_mistakes);
+        tvStatAwayMistakes = findViewById(R.id.tv_stat_away_mistakes);
+
         // 4. Λήψη και εμφάνιση δεδομένων από το Intent
         if (getIntent() != null) {
-            // Διορθώθηκε: Διαβάζουμε τα IDs ως int για να γεμίσουν οι παγκόσμιες μεταβλητές
             matchId = getIntent().getIntExtra("MATCH_ID", -1);
             homeTeamId = getIntent().getIntExtra("HOME_TEAM_ID", -1);
             awayTeamId = getIntent().getIntExtra("AWAY_TEAM_ID", -1);
@@ -83,7 +96,6 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             int awayScore = getIntent().getIntExtra("AWAY_SCORE", 0);
             String homeLogo = getIntent().getStringExtra("HOME_LOGO");
             String awayLogo = getIntent().getStringExtra("AWAY_LOGO");
-
 
             // Εμφάνιση στο Scoreboard
             tvHomeTeam.setText(homeTeam);
@@ -98,11 +110,44 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             Glide.with(this).load(awayLogo).into(ivAwayLogo);
         }
 
+        // ====================================================================
+        // ΝΕΑ ΛΕΙΤΟΥΡΓΙΚΟΤΗΤΑ: CLICK LISTENERS ΓΙΑ ΜΕΤΑΒΑΣΗ ΣΤΟ TEAM PROFILE
+        // ====================================================================
+
+        // Click Listener για τη Γηπεδούχο Ομάδα (Home Team)
+        View.OnClickListener homeTeamClickListener = v -> {
+            if (homeTeamId != -1) {
+                Intent intent = new Intent(FanMatchDetailsActivity.this, TeamRosterActivity.class);
+                intent.putExtra("TEAM_ID", homeTeamId);
+                startActivity(intent);
+            }
+        };
+        ivHomeLogo.setOnClickListener(homeTeamClickListener);
+        tvHomeTeam.setOnClickListener(homeTeamClickListener);
+
+        // Click Listener για τη Φιλοξενούμενη Ομάδα (Away Team)
+        View.OnClickListener awayTeamClickListener = v -> {
+            if (awayTeamId != -1) {
+                Intent intent = new Intent(FanMatchDetailsActivity.this, TeamRosterActivity.class);
+                intent.putExtra("TEAM_ID", awayTeamId);
+                startActivity(intent);
+            }
+        };
+        ivAwayLogo.setOnClickListener(awayTeamClickListener);
+        tvAwayTeam.setOnClickListener(awayTeamClickListener);
+
+        // ====================================================================
+
         // 5. Setup των RecyclerViews
         setupLineupsRecyclerViews();
 
         // 6. Φόρτωμα των δεδομένων live μέσω OkHttp
         fetchLineupsFromBackend();
+
+        // Φόρτωμα στατιστικών αγώνα αν το matchId είναι έγκυρο
+        if (matchId != -1) {
+            fetchMatchStatsFromBackend();
+        }
 
         // 7. Click Listeners για το Άνοιγμα/Κλείσιμο (Expand/Collapse)
         layoutHomeHeader.setOnClickListener(v -> toggleLayout(rvHomePlayers, ivHomeArrow));
@@ -119,8 +164,8 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         rvHomePlayers.setLayoutManager(new LinearLayoutManager(this));
         rvAwayPlayers.setLayoutManager(new LinearLayoutManager(this));
 
-        homeAdapter = new PlayerAdapter(homePlayersList,homeTeam);
-        awayAdapter = new PlayerAdapter(awayPlayersList,awayTeam);
+        homeAdapter = new PlayerAdapter(homePlayersList, homeTeam);
+        awayAdapter = new PlayerAdapter(awayPlayersList, awayTeam);
 
         rvHomePlayers.setAdapter(homeAdapter);
         rvAwayPlayers.setAdapter(awayAdapter);
@@ -129,7 +174,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private void fetchLineupsFromBackend() {
         new Thread(() -> {
             try {
-                String url = "http://10.140.7.36/statScopeApp/backend/api/getMatchLineups.php?match_id=" + matchId;
+                String url = "http://10.140.9.120/statScopeApp/backend/api/getMatchLineups.php?match_id=" + matchId;
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
@@ -144,16 +189,12 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                     homePlayersList.clear();
                     awayPlayersList.clear();
 
-                    // Αρχικοποίηση του Gson για αυτόματο mapping
                     com.google.gson.Gson gson = new com.google.gson.Gson();
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject playerObj = jsonArray.getJSONObject(i);
-
-                        // ΜΑΓΙΚΗ ΓΡΑΜΜΗ: Το Gson μετατρέπει το JSON σε Player χωρίς να χρειάζεται Setters!
                         Player player = gson.fromJson(playerObj.toString(), Player.class);
 
-                        // Φιλτράρισμα με βάση το team_id του παίκτη (που πλέον διαβάζεται κανονικά)
                         if (player.getTeamId() == homeTeamId) {
                             homePlayersList.add(player);
                         } else if (player.getTeamId() == awayTeamId) {
@@ -161,15 +202,78 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Ανανέωση των Adapters στο UI Thread
-                    // Ανανέωση των Adapters στο UI Thread με την έτοιμη μέθοδο του Android
                     runOnUiThread(() -> {
-                        homeAdapter.notifyDataSetChanged();
-                        awayAdapter.notifyDataSetChanged();
+                        if (!isFinishing() && !isDestroyed()) {
+                            homeAdapter.notifyDataSetChanged();
+                            awayAdapter.notifyDataSetChanged();
+                        }
                     });
                 }
             } catch (Exception e) {
                 Log.e("Lineups", "Error fetching lineups: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    // Τράβηγμα στατιστικών από το getMatchStats.php API
+    private void fetchMatchStatsFromBackend() {
+        new Thread(() -> {
+            try {
+                String url = "http://10.140.9.120/statScopeApp/backend/api/getMatchStats.php?match_id=" + matchId;
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    String jsonResponse = response.body().string();
+                    JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                    // Ανάγνωση ΟΛΩΝ των τιμών από το JSON αντικείμενο
+                    String homeShots = jsonObject.getString("home_shots");
+                    String awayShots = jsonObject.getString("away_shots");
+                    String homePasses = jsonObject.getString("home_passes");
+                    String awayPasses = jsonObject.getString("away_passes");
+                    String homeFouls = jsonObject.getString("home_fouls");
+                    String awayFouls = jsonObject.getString("away_fouls");
+                    String homeCards = jsonObject.getString("home_cards");
+                    String awayCards = jsonObject.getString("away_cards");
+
+                    String homeAssists = jsonObject.getString("home_assists");
+                    String awayAssists = jsonObject.getString("away_assists");
+                    String homeTackles = jsonObject.getString("home_tackles");
+                    String awayTackles = jsonObject.getString("away_tackles");
+                    String homeCorners = jsonObject.getString("home_corners");
+                    String awayCorners = jsonObject.getString("away_corners");
+                    String homeMistakes = jsonObject.getString("home_mistakes");
+                    String awayMistakes = jsonObject.getString("away_mistakes");
+
+                    // Ασφαλής ενημέρωση ΟΛΩΝ των TextViews στο Main Thread
+                    runOnUiThread(() -> {
+                        if (!isFinishing() && !isDestroyed()) {
+                            tvStatHomeShots.setText(homeShots);
+                            tvStatAwayShots.setText(awayShots);
+                            tvStatHomePasses.setText(homePasses);
+                            tvStatAwayPasses.setText(awayPasses);
+                            tvStatHomeFouls.setText(homeFouls);
+                            tvStatAwayFouls.setText(awayFouls);
+                            tvStatHomeCards.setText(homeCards);
+                            tvStatAwayCards.setText(awayCards);
+
+                            tvStatHomeAssists.setText(homeAssists);
+                            tvStatAwayAssists.setText(awayAssists);
+                            tvStatHomeTackles.setText(homeTackles);
+                            tvStatAwayTackles.setText(awayTackles);
+                            tvStatHomeCorners.setText(homeCorners);
+                            tvStatAwayCorners.setText(awayCorners);
+                            tvStatHomeMistakes.setText(homeMistakes);
+                            tvStatAwayMistakes.setText(awayMistakes);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("MatchStats", "Error fetching stats: " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();

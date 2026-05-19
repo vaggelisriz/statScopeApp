@@ -1,5 +1,6 @@
 package com.example.frontend;
 
+import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -22,9 +23,17 @@ public class ChampionshipPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new StandingsFragment(); // Βαθμολογία
             case 1:
-                return new TeamsFragment();     // Ομάδες
+                // ============================================================
+                // ΔΙΟΡΘΩΣΗ: Περνάμε το ID και στο TeamsFragment μέσω Bundle
+                // ============================================================
+                TeamsFragment teamsFragment = new TeamsFragment();
+                Bundle args = new Bundle();
+                args.putInt("CHAMPIONSHIP_ID", championshipId);
+                teamsFragment.setArguments(args);
+                return teamsFragment;
+
             case 2:
-                // Περνάμε το ID στο Fragment των αγώνων!
+                // Περνάμε το ID στο Fragment των αγώνων (έτοιμο από τη συνάδελφο)
                 return MatchesFragment.newInstance(championshipId);
             default:
                 return new StandingsFragment();

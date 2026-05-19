@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://tools.android.com/tools"
-    xmlns:tools2="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#01051a"
@@ -20,11 +19,10 @@
         android:contentDescription="Back to Main Dashboard"
         android:padding="10dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_back_arrow"
+        android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#00E676"
-        tools:ignore="HardcodedText" />
+        app:tint="#00E676" />
 
     <TextView
         android:id="@+id/tv_dashboard_title"
@@ -40,8 +38,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/btn_back_dashboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_back_dashboard"
-        app:layout_constraintTop_toTopOf="@+id/btn_back_dashboard"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toTopOf="@+id/btn_back_dashboard" />
 
     <View
         android:id="@+id/accent_line"
@@ -52,45 +49,102 @@
         app:layout_constraintStart_toStartOf="@+id/tv_dashboard_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_dashboard_title" />
 
-    <TextView
-        android:id="@+id/tv_championships_header"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="40dp"
-        android:text="CHAMPIONSHIPS"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:backgroundTint="#01051a"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accent_line"
-        app:layout_constraintWidth_percent="0.85" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accent_line">
 
-    <ListView
-        android:id="@+id/lv_championships_options"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:visibility="gone"
-        android:background="#0a1128"
-        app:layout_constraintEnd_toEndOf="@+id/tv_championships_header"
-        app:layout_constraintStart_toStartOf="@+id/tv_championships_header"
-        app:layout_constraintTop_toBottomOf="@+id/tv_championships_header" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="32dp">
 
-    <Spinner
-        android:id="@+id/spinner_matches"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#00E676"
-        android:entries="@array/matches_title"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lv_championships_options"
-        app:layout_constraintWidth_percent="0.85" />
+            <LinearLayout
+                android:id="@+id/layout_matches_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#0F1633"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="24dp">
+
+                <TextView
+                    android:id="@+id/tv_matches_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="MATCHES"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_matches_arrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/arrow_up_float"
+                    app:tint="#00E676" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_live_matches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#0a1128"
+                android:visibility="visible"
+                android:layout_marginHorizontal="24dp"
+                android:nestedScrollingEnabled="false" />
+
+            <LinearLayout
+                android:id="@+id/layout_championship_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#0F1633"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="24dp">
+
+                <TextView
+                    android:id="@+id/tv_championships_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SELECT CHAMPIONSHIP"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_championship_arrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/arrow_down_float"
+                    app:tint="#00E676" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_championship_options_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#0a1128"
+                android:visibility="gone"
+                android:layout_marginHorizontal="24dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

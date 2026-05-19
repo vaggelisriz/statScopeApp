@@ -6,15 +6,28 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class PlayerDetailsActivity extends AppCompatActivity {
 
-    private TextView tvPlayerAge; // Το κάνουμε καθολικό για να το βλέπει η fetch μέθοδος
+    private TextView tvPlayerAge;
+
+    // Τα νέα TextViews για τα στατιστικά
+    private TextView tvAppearances, tvGoals, tvAssists, tvYellowCards, tvRedCards;
+
+    private RecyclerView rvHistory;
+    private PlayerHistoryAdapter historyAdapter;
+    private final List<PlayerMatchHistory> matchHistoryList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +40,20 @@ public class PlayerDetailsActivity extends AppCompatActivity {
         TextView tvPlayerPosition = findViewById(R.id.tv_details_player_position);
         TextView tvPlayerNumber = findViewById(R.id.tv_details_player_number);
         TextView tvPlayerTeam = findViewById(R.id.tv_details_player_team);
-
-        // Αρχικοποίηση του TextView της ηλικίας
         tvPlayerAge = findViewById(R.id.tv_details_player_age);
+
+        // Αρχικοποίηση των Textbviews στατιστικών
+        tvAppearances = findViewById(R.id.tv_details_player_appearances);
+        tvGoals = findViewById(R.id.tv_details_player_goals);
+        tvAssists = findViewById(R.id.tv_details_player_assists);
+        tvYellowCards = findViewById(R.id.tv_details_player_yellow_cards);
+        tvRedCards = findViewById(R.id.tv_details_player_red_cards);
+
+        //Αρχικοποίηση των στοιχείων στατιστικών ανά αγώνα
+        rvHistory = findViewById(R.id.rv_player_match_history);
+        rvHistory.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        historyAdapter = new PlayerHistoryAdapter(matchHistoryList);
+        rvHistory.setAdapter(historyAdapter);
 
         if (getIntent() != null) {
             int playerId = getIntent().getIntExtra("PLAYER_ID", -1);
@@ -39,7 +63,6 @@ public class PlayerDetailsActivity extends AppCompatActivity {
             String number = getIntent().getStringExtra("PLAYER_NUMBER");
             String teamName = getIntent().getStringExtra("PLAYER_TEAM_NAME");
 
-            // Εμφάνιση των στοιχείων που ήδη έχουμε από τον Adapter
             tvPlayerName.setText(name);
             tvPlayerPosition.setText(position != null ? position : "N/A");
             tvPlayerNumber.setText(number != null && !number.isEmpty() ? "#" + number : "");
@@ -51,9 +74,12 @@ public class PlayerDetailsActivity extends AppCompatActivity {
                     .circleCrop()
                     .into(ivPlayerPhoto);
 
-            // ΑΝ ΤΟ ID ΕΙΝΑΙ ΕΓΚΥΡΟ, ΤΡΑΒΑΜΕ ΤΗΝ ΗΛΙΚΙΑ LIVE ΑΠΟ ΤΟ BACKEND
             if (playerId != -1) {
+                // Φέρνουμε την ηλικία (όπως το είχες)
                 fetchPlayerAgeFromServer(playerId);
+                // Φέρνουμε και τα στατιστικά από το match_events
+                fetchPlayerStatsFromServer(playerId);
+                fetchPlayerMatchHistoryFromServer(playerId);
             }
         }
 
@@ -63,9 +89,7 @@ public class PlayerDetailsActivity extends AppCompatActivity {
     private void fetchPlayerAgeFromServer(int playerId) {
         new Thread(() -> {
             try {
-                // Χρησιμοποιούμε ένα endpoint που επιστρέφει τα στοιχεία ενός συγκεκριμένου παίκτη βάσει ID
-                String url = "http://10.140.7.36/statScopeApp/backend/api/getPlayerDetails.php?player_id=" + playerId;
-
+                String url = "http://10.140.9.120/statScopeApp/backend/api/getPlayerDetails.php?player_id=" + playerId;
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
@@ -73,11 +97,8 @@ public class PlayerDetailsActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String jsonResponse = response.body().string();
                     JSONObject jsonObject = new JSONObject(jsonResponse);
-
-                    // Παίρνουμε την ηλικία από το JSON
                     int age = jsonObject.getInt("age");
 
-                    // Ενημερώνουμε το UI
                     runOnUiThread(() -> {
                         if (age > 0) {
                             tvPlayerAge.setText(age + " years");
@@ -89,6 +110,87 @@ public class PlayerDetailsActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("PlayerDetails", "Error fetching age: " + e.getMessage());
                 runOnUiThread(() -> tvPlayerAge.setText("N/A"));
+            }
+        }).start();
+    }
+
+    // Η ΝΕΑ ΜΕΘΟΔΟΣ ΓΙΑ ΤΑ ΣΤΑΤΙΣΤΙΚΑ (MATCH_EVENTS)
+    private void fetchPlayerStatsFromServer(int playerId) {
+        new Thread(() -> {
+            try {
+                // Χτυπάμε το νέο endpoint
+                String url = "http://10.140.9.120/statScopeApp/backend/api/getPlayerStats.php?player_id=" + playerId;
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    String jsonResponse = response.body().string();
+                    JSONObject jsonObject = new JSONObject(jsonResponse);
+
+                    // Διαβάζουμε τα πεδία που θα υπολογίσει η PHP
+                    int goals = jsonObject.optInt("total_goals", 0);
+                    int assists = jsonObject.optInt("total_assists", 0);
+                    int yellowCards = jsonObject.optInt("total_yellow_cards", 0);
+                    int redCards = jsonObject.optInt("total_red_cards", 0);
+                    int appearances = jsonObject.optInt("appearances", 0);
+
+                    // Ανανέωση του UI με ασφάλεια στο κεντρικό thread
+                    runOnUiThread(() -> {
+                        tvAppearances.setText(String.valueOf(appearances));
+                        tvGoals.setText(String.valueOf(goals));
+                        tvAssists.setText(String.valueOf(assists));
+                        tvYellowCards.setText(String.valueOf(yellowCards));
+                        tvRedCards.setText(String.valueOf(redCards));
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("PlayerDetails", "Error fetching stats: " + e.getMessage());
+                runOnUiThread(() -> {
+                    tvAppearances.setText("0");
+                    tvGoals.setText("0");
+                    tvAssists.setText("0");
+                    tvYellowCards.setText("0");
+                    tvRedCards.setText("0");
+                });
+            }
+        }).start();
+    }
+
+    private void fetchPlayerMatchHistoryFromServer(int playerId) {
+        new Thread(() -> {
+            try {
+                String url = "http://10.140.9.120/statScopeApp/backend/api/getPlayerMatchHistory.php?player_id=" + playerId;
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    String jsonResponse = response.body().string();
+                    org.json.JSONArray jsonArray = new org.json.JSONArray(jsonResponse);
+
+                    matchHistoryList.clear();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        org.json.JSONObject obj = jsonArray.getJSONObject(i);
+
+                        matchHistoryList.add(new PlayerMatchHistory(
+                                obj.getInt("match_id"),
+                                obj.getString("home_team"),
+                                obj.getString("away_team"),
+                                obj.getInt("match_goals"),
+                                obj.getInt("match_assists"),
+                                obj.getInt("match_yellow_cards"),
+                                obj.getInt("match_red_cards")
+                        ));
+                    }
+
+                    // Ενημέρωση της λίστας στο Main Thread
+                    runOnUiThread(() -> historyAdapter.notifyDataSetChanged());
+                }
+            } catch (Exception e) {
+                Log.e("PlayerDetails", "Error fetching match history: " + e.getMessage());
             }
         }).start();
     }

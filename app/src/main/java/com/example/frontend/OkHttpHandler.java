@@ -87,4 +87,22 @@ public class OkHttpHandler {
         }
         return matchList;
     }
+
+
+    public String getPlayerStats(String url, int playerId) throws Exception {
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+        // Στέλνουμε το player_id με ασφάλεια μέσω POST Body
+        RequestBody formBody = new FormBody.Builder()
+                .add("player_id", String.valueOf(playerId))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string(); // Επιστρέφουμε το RAW JSON String
+    }
 }
