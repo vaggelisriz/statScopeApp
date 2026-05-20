@@ -89,7 +89,7 @@ public class PlayerDetailsActivity extends AppCompatActivity {
     private void fetchPlayerAgeFromServer(int playerId) {
         new Thread(() -> {
             try {
-                String url = "http://10.140.9.120/statScopeApp/backend/api/getPlayerDetails.php?player_id=" + playerId;
+                String url = Config.BASE_URL+"/getPlayerDetails.php?player_id=" + playerId;
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
@@ -119,7 +119,7 @@ public class PlayerDetailsActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 // Χτυπάμε το νέο endpoint
-                String url = "http://10.140.9.120/statScopeApp/backend/api/getPlayerStats.php?player_id=" + playerId;
+                String url = Config.BASE_URL+"/getPlayerStats.php?player_id=" + playerId;
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
@@ -161,7 +161,7 @@ public class PlayerDetailsActivity extends AppCompatActivity {
     private void fetchPlayerMatchHistoryFromServer(int playerId) {
         new Thread(() -> {
             try {
-                String url = "http://10.140.9.120/statScopeApp/backend/api/getPlayerMatchHistory.php?player_id=" + playerId;
+                String url = Config.BASE_URL+"/getPlayerMatchHistory.php?player_id=" + playerId;
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();

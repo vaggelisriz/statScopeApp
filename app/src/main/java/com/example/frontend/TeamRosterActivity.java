@@ -24,7 +24,6 @@ import okhttp3.Response;
 public class TeamRosterActivity extends AppCompatActivity {
 
     private int teamId;
-    private final String ip = "10.140.9.120";
 
     // Views Metadata & Stats
     private ImageView ivTeamLogo, ivCompArrow;
@@ -88,7 +87,7 @@ public class TeamRosterActivity extends AppCompatActivity {
     private void fetchTeamDetailsFromBackend() {
         new Thread(() -> {
             try {
-                String url = "http://" + ip + "/statScopeApp/backend/api/getTeamDetails.php?team_id=" + teamId;
+                String url = Config.BASE_URL+"/getTeamDetails.php?team_id=" + teamId;
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();

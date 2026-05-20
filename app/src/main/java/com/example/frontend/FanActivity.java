@@ -42,7 +42,6 @@ public class FanActivity extends AppCompatActivity {
     private ChampionshipList chlist;
     private OkHttpClient okHttpClient;
 
-    private final String ip = "10.140.9.120";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +103,7 @@ public class FanActivity extends AppCompatActivity {
     private void fetchLiveMatchesFromBackend() {
         new Thread(() -> {
             try {
-                String url = "http://" + ip + "/statScopeApp/backend/api/getMatches.php?status=live";
+                String url = Config.BASE_URL+"/getMatches.php?status=live";
 
                 Request request = new Request.Builder().url(url).build();
                 Response response = okHttpClient.newCall(request).execute();
@@ -130,7 +129,7 @@ public class FanActivity extends AppCompatActivity {
 
     private void loadChampionships() {
         try {
-            chlist = new ChampionshipList(ip);
+            chlist = new ChampionshipList();
             List<String> championshipNames = new ArrayList<>(chlist.getChampionships());
 
             layoutChampionshipOptionsContainer.removeAllViews();

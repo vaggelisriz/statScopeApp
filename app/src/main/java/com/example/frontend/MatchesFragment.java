@@ -86,7 +86,7 @@ public class MatchesFragment extends Fragment {
 
     private void fetchChampionshipMatches() {
         try {
-            String url = "http://10.140.9.120/statScopeApp/backend/api/getMatches.php";
+            String url = Config.BASE_URL+"/getMatches.php";
 
             OkHttpHandler handler = new OkHttpHandler();
             ArrayList<Match> allMatches = handler.populateMatches(url);

@@ -74,7 +74,7 @@ public class TeamsFragment extends Fragment {
     private void fetchTeamsFromServer() {
         new Thread(() -> {
             try {
-                String url = "http://10.140.9.120/statScopeApp/backend/api/getTeams.php?championship_id=" + championshipId;
+                String url = Config.BASE_URL+"/getTeams.php?championship_id=" + championshipId;
 
                 // ΔΙΚΟ ΜΑΣ ΧΑΡΑΚΤΗΡΙΣΤΙΚΟ LOG
                 System.out.println("=== ΜΥΣΤΙΚΟ LOG === ΧΤΥΠΑΩ ΤΟ URL: " + url);

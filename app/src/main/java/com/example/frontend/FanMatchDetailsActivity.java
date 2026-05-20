@@ -174,7 +174,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private void fetchLineupsFromBackend() {
         new Thread(() -> {
             try {
-                String url = "http://10.140.9.120/statScopeApp/backend/api/getMatchLineups.php?match_id=" + matchId;
+                String url = Config.BASE_URL+"/getMatchLineups.php?match_id=" + matchId;
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
@@ -220,7 +220,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private void fetchMatchStatsFromBackend() {
         new Thread(() -> {
             try {
-                String url = "http://10.140.9.120/statScopeApp/backend/api/getMatchStats.php?match_id=" + matchId;
+                String url = Config.BASE_URL+"/getMatchStats.php?match_id=" + matchId;
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();

@@ -7,8 +7,8 @@ public class ChampionshipList{
 
     private ArrayList<Championship> chlist= new ArrayList<>();
 
-    public ChampionshipList(String ip) {
-        String url= "http://"+ip+"/statScopeApp/backend/api/getChampionships.php";
+    public ChampionshipList() {
+        String url= Config.BASE_URL+"/getChampionships.php";
         try {
             OkHttpHandler okHttpHandler = new OkHttpHandler();
             chlist = okHttpHandler.populateChampionshipSpinner(url);
