@@ -16,22 +16,20 @@ public class StatisticianActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistician);
 
-        // UI Initialization
-        btnBack = findViewById(R.id.btn_back_dashboard);
-        btnSetMatchLive = findViewById(R.id.btn_set_match_live);
+        btnBack          = findViewById(R.id.btn_back_dashboard);
+        btnSetMatchLive  = findViewById(R.id.btn_set_match_live);
         btnManageMatches = findViewById(R.id.btn_manage_matches);
 
-        // 1. Back Button - Επιστροφή στην προηγούμενη οθόνη (Main)
+        // Επιστροφή στην MainActivity
         btnBack.setOnClickListener(v -> finish());
 
-        // 2. Set Match Live - Ανοίγει τη λίστα με τα Scheduled ματς
+        // Ανοίγει τη λίστα Scheduled ματς → για να στήσει ένα ματς live
         btnSetMatchLive.setOnClickListener(v -> {
-            // Εδώ στέλνουμε τον χρήστη στην οθόνη επιλογής αγώνα
             Intent intent = new Intent(StatisticianActivity.this, ScheduledMatchesActivity.class);
             startActivity(intent);
         });
 
-        // 3. Manage Matches - Ανοίγει το LiveMatchesActivity (Διαχείριση ήδη Live αγώνων)
+        // Ανοίγει τη λίστα Live ματς → για να διαχειριστεί αγώνα που τρέχει
         btnManageMatches.setOnClickListener(v -> {
             Intent intent = new Intent(StatisticianActivity.this, LiveMatchesActivity.class);
             startActivity(intent);

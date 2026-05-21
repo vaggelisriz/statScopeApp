@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,7 +50,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
     private final List<Player> awayBench    = new ArrayList<>();
 
     private int activeTab = 0;
-
     private StartersAdapter startersAdapter;
 
     @Override
@@ -74,7 +73,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
         awayTeamName = getIntent().getStringExtra(EXTRA_AWAY_TEAM);
 
         if (matchId == -1 || homeTeamId == -1 || awayTeamId == -1) {
-            Toast.makeText(this, "Error: Match details not found", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -123,28 +121,24 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 .getMatchLineups(matchId)
                 .enqueue(new Callback<LineupResponse>() {
                     @Override
-                    public void onResponse(Call<LineupResponse> call, Response<LineupResponse> response) {
+                    public void onResponse(@NonNull Call<LineupResponse> call, @NonNull Response<LineupResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             List<Player> players = response.body().getPlayers();
 
                             if (players != null && !players.isEmpty()) {
-                                Log.d(TAG, "Lineup loaded: " + players.size() + " players. Now loading bench...");
                                 distributeExistingLineup(players);
                                 loadRemainingPlayersForBench();
                             } else {
-                                Log.d(TAG, "Empty lineup — loading team players as default");
                                 loadDefaultLineupFromTeams();
                             }
                         } else {
-                            Log.e(TAG, "getMatchLineups failed: HTTP " + response.code());
                             showLoading(false);
                             showError("Error loading lineup (HTTP " + response.code() + ")");
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<LineupResponse> call, Throwable t) {
-                        Log.e(TAG, "getMatchLineups network error", t);
+                    public void onFailure(@NonNull Call<LineupResponse> call, @NonNull Throwable t) {
                         showLoading(false);
                         showError("Network error: " + t.getMessage());
                     }
@@ -172,7 +166,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
         RetrofitClient.getApiService().getTeamPlayers(homeTeamId).enqueue(new Callback<List<Player>>() {
             @Override
-            public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+            public void onResponse(@NonNull Call<List<Player>> call, @NonNull Response<List<Player>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     allHome.addAll(response.body());
                 }
@@ -182,8 +176,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Player>> call, Throwable t) {
-                Log.e(TAG, "getPlayers for bench (home) failed", t);
+            public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
                 if (pendingCalls.decrementAndGet() == 0) {
                     mergePlayersIntoBench(allHome, allAway);
                 }
@@ -192,7 +185,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
         RetrofitClient.getApiService().getTeamPlayers(awayTeamId).enqueue(new Callback<List<Player>>() {
             @Override
-            public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+            public void onResponse(@NonNull Call<List<Player>> call, @NonNull Response<List<Player>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     allAway.addAll(response.body());
                 }
@@ -202,8 +195,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Player>> call, Throwable t) {
-                Log.e(TAG, "getPlayers for bench (away) failed", t);
+            public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
                 if (pendingCalls.decrementAndGet() == 0) {
                     mergePlayersIntoBench(allHome, allAway);
                 }
@@ -243,7 +235,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
             showLoading(false);
             refreshStartersView();
-            Log.d(TAG, "Bench loaded. Home bench: " + homeBench.size() + ", Away bench: " + awayBench.size());
         });
     }
 
@@ -257,10 +248,9 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 .getTeamPlayers(homeTeamId)
                 .enqueue(new Callback<List<Player>>() {
                     @Override
-                    public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+                    public void onResponse(@NonNull Call<List<Player>> call, @NonNull Response<List<Player>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             homePlayers.addAll(response.body());
-                            Log.d(TAG, "Home players loaded: " + homePlayers.size());
                         }
                         if (pendingCalls.decrementAndGet() == 0) {
                             buildDefaultLineup(homePlayers, awayPlayers);
@@ -268,8 +258,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Player>> call, Throwable t) {
-                        Log.e(TAG, "getPlayers (home) network error", t);
+                    public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
                         if (pendingCalls.decrementAndGet() == 0) {
                             buildDefaultLineup(homePlayers, awayPlayers);
                         }
@@ -280,10 +269,9 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 .getTeamPlayers(awayTeamId)
                 .enqueue(new Callback<List<Player>>() {
                     @Override
-                    public void onResponse(Call<List<Player>> call, Response<List<Player>> response) {
+                    public void onResponse(@NonNull Call<List<Player>> call, @NonNull Response<List<Player>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             awayPlayers.addAll(response.body());
-                            Log.d(TAG, "Away players loaded: " + awayPlayers.size());
                         }
                         if (pendingCalls.decrementAndGet() == 0) {
                             buildDefaultLineup(homePlayers, awayPlayers);
@@ -291,8 +279,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Player>> call, Throwable t) {
-                        Log.e(TAG, "getPlayers (away) network error", t);
+                    public void onFailure(@NonNull Call<List<Player>> call, @NonNull Throwable t) {
                         if (pendingCalls.decrementAndGet() == 0) {
                             buildDefaultLineup(homePlayers, awayPlayers);
                         }
@@ -314,9 +301,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 showError("No players found for the teams.");
             } else {
                 refreshStartersView();
-                Toast.makeText(this,
-                        "New match: placed " + STARTERS_COUNT + " default starters per team",
-                        Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -337,16 +321,16 @@ public class UpdateLineupsActivity extends AppCompatActivity {
     private void refreshStartersView() {
         List<Player> currentStarters = (activeTab == 0) ? homeStarters : awayStarters;
 
-        if (startersAdapter == null) {
-            startersAdapter = new StartersAdapter(currentStarters, player -> {
+        startersAdapter = new StartersAdapter(currentStarters, new StartersAdapter.OnSwapClickListener() {
+            @Override
+            public void onSwapClick(Player player) {
                 List<Player> bench = (activeTab == 0) ? homeBench : awayBench;
                 List<Player> starters = (activeTab == 0) ? homeStarters : awayStarters;
                 showBenchSheet(player, starters, bench);
-            });
-            startersRecycler.setAdapter(startersAdapter);
-        } else {
-            startersAdapter.updateData(currentStarters);
-        }
+            }
+        });
+
+        startersRecycler.setAdapter(startersAdapter);
 
         tvEmptyState.setVisibility(currentStarters.isEmpty() ? View.VISIBLE : View.GONE);
         startersRecycler.setVisibility(currentStarters.isEmpty() ? View.GONE : View.VISIBLE);
@@ -354,7 +338,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
     private void showBenchSheet(Player playerOut, List<Player> starters, List<Player> bench) {
         if (bench.isEmpty()) {
-            Toast.makeText(this, "No players available on the bench", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -371,16 +354,15 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
             if (outIdx != -1 && inIdx != -1) {
                 playerOut.setStarter(false);
-                playerOut.setSubstituted(false); // Χάνει το highlight αν βγει στον πάγκο
+                playerOut.setSubstituted(false);
 
                 playerIn.setStarter(true);
-                playerIn.setSubstituted(true); // Ενεργοποίηση του μόνιμου highlight για τον νέο βασικό
+                playerIn.setSubstituted(true);
 
                 starters.set(outIdx, playerIn);
                 bench.set(inIdx, playerOut);
 
                 startersAdapter.notifyItemChanged(outIdx);
-                Log.d(TAG, "Swap: " + playerIn.getName() + " ← " + playerOut.getName());
             }
 
             sheet.dismiss();
@@ -392,7 +374,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
     private void saveLineups() {
         if (homeStarters.size() < STARTERS_COUNT || awayStarters.size() < STARTERS_COUNT) {
-            Toast.makeText(this, "At least " + STARTERS_COUNT + " starters are required per team", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -406,25 +387,23 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 .updateMatchStatusAndLineups(matchId, "live", homeIds, awayIds)
                 .enqueue(new Callback<StatusResponse>() {
                     @Override
-                    public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
+                    public void onResponse(@NonNull Call<StatusResponse> call, @NonNull Response<StatusResponse> response) {
                         showLoading(false);
                         btnSave.setEnabled(true);
 
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            Toast.makeText(UpdateLineupsActivity.this, "Lineup saved successfully!", Toast.LENGTH_SHORT).show();
+                        // Διόρθωση εδώ: χρησιμοποιούμε την έτοιμη μέθοδο response.isSuccessful() της Retrofit
+                        if (response.isSuccessful()) {
                             finish();
                         } else {
                             Log.e(TAG, "Save failed: HTTP " + response.code());
-                            Toast.makeText(UpdateLineupsActivity.this, "Save failed (HTTP " + response.code() + ")", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<StatusResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<StatusResponse> call, @NonNull Throwable t) {
                         showLoading(false);
                         btnSave.setEnabled(true);
                         Log.e(TAG, "Save network error", t);
-                        Toast.makeText(UpdateLineupsActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

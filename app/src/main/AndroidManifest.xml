@@ -13,8 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Frontend"
-        tools:targetApi="31"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
 
         <activity
             android:name=".MainActivity"
@@ -25,33 +25,16 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".StatisticianActivity"
-            android:exported="false" />
+        <activity android:name=".StatisticianActivity"  android:exported="false" />
+        <activity android:name=".LiveMatchesActivity"   android:exported="false" />
+        <activity android:name=".MatchDetailsActivity"  android:exported="false" />
+        <activity android:name=".ScheduledMatchesActivity" android:exported="false" />
+        <activity android:name=".MatchLiveControlActivity" android:exported="false" />
+        <activity android:name=".LiveMatchActionsActivity" android:exported="false" />
+        <activity android:name=".UpdateLineupsActivity" android:exported="false" />
 
-        <activity
-            android:name=".LiveMatchesActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".MatchDetailsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ScheduledMatchesActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".MatchLiveControlActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".LiveMatchActionsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".UpdateLineupsActivity"
-            android:exported="false" />
+        <!-- ✅ ΝΕΟ: Προστέθηκε η StatisticsActivity που ανοίγει από το LiveMatchActionsActivity -->
+        <activity android:name=".StatisticsActivity"   android:exported="false" />
 
     </application>
 

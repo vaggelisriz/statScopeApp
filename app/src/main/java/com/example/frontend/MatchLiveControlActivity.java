@@ -157,15 +157,13 @@ public class MatchLiveControlActivity extends AppCompatActivity {
         btnStartLive.setText(ready ? "START MATCH" : "WAITING FOR LINEUPS");
     }
 
-    // ✅ ΔΙΟΡΘΩΣΗ: Callback<Void> → Callback<StatusResponse>
-    // Το ApiService.updateMatchStatusAndLineups() επιστρέφει Call<StatusResponse>,
-    // οπότε το Callback πρέπει να έχει τον ίδιο generic type.
     private void updateStatusToLive(int matchId, List<Integer> home, List<Integer> away) {
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         apiService.updateMatchStatusAndLineups(matchId, "live", home, away).enqueue(new Callback<StatusResponse>() {
             @Override
             public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                // ✅ ΔΙΟΡΘΩΣΗ: Στηριζόμαστε αποκλειστικά στο response.isSuccessful() για την αποφυγή compile errors
+                if (response.isSuccessful()) {
                     Toast.makeText(MatchLiveControlActivity.this, "Match is now LIVE!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {

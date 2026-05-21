@@ -2,72 +2,115 @@ package com.example.frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
-import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LiveMatchesActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
     private MatchAdapter adapter;
-    private ImageButton btnBack;
-    private final List<Match> liveMatches = new ArrayList<>();
+    private LiveMatchesViewModel viewModel;
+    private ProgressBar progressBar;
+
+    // Auto refresh κάθε 3 δευτερόλεπτα
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private final Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            viewModel.refresh();
+
+            // ξανατρέχει μετά από 3 sec
+            handler.postDelayed(this, 3000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_matches);
 
-        recyclerView = findViewById(R.id.rv_live_matches);
-        btnBack = findViewById(R.id.btn_back_live);
+        // ── UI ─────────────────────────────────────────────
+        RecyclerView recyclerView = findViewById(R.id.rv_live_matches);
+        ImageButton btnBack = findViewById(R.id.btn_back_live);
+
+        // Αν έχεις ProgressBar στο XML
+        // progressBar = findViewById(R.id.progress_bar);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Αρχικοποίηση του adapter μία φορά
-        adapter = new MatchAdapter(this, liveMatches, match -> {
-            Intent intent = new Intent(LiveMatchesActivity.this, LiveMatchActionsActivity.class);
+        // Adapter
+        adapter = new MatchAdapter(this, new ArrayList<>(), match -> {
+            Intent intent = new Intent(
+                    LiveMatchesActivity.this,
+                    LiveMatchActionsActivity.class
+            );
+
             intent.putExtra("selected_match", match);
             startActivity(intent);
         });
+
         recyclerView.setAdapter(adapter);
 
+        // ── ViewModel ─────────────────────────────────────
+        viewModel = new ViewModelProvider(this)
+                .get(LiveMatchesViewModel.class);
+
+        // Live matches observer
+        viewModel.liveMatches.observe(this, matches -> {
+            adapter.updateList(matches);
+        });
+
+        // Loading observer
+        viewModel.isLoading.observe(this, loading -> {
+            if (progressBar != null) {
+                progressBar.setVisibility(
+                        loading ? View.VISIBLE : View.GONE
+                );
+            }
+        });
+
+        // Error observer
+        viewModel.error.observe(this, msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(
+                        LiveMatchesActivity.this,
+                        msg,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+
+        // Back button
         btnBack.setOnClickListener(v -> finish());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        fetchLiveMatches();
+
+        // Άμεσο refresh
+        viewModel.refresh();
+
+        // Start auto refresh
+        handler.post(refreshRunnable);
     }
 
-    private void fetchLiveMatches() {
-        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
-        apiService.getAllMatches().enqueue(new Callback<List<Match>>() {
-            @Override
-            public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveMatches.clear();
-                    for (Match m : response.body()) {
-                        if ("live".equalsIgnoreCase(m.getStatus())) {
-                            liveMatches.add(m);
-                        }
-                    }
-                    // Ενημερώνουμε τον ήδη υπάρχοντα adapter
-                    adapter.notifyDataSetChanged();
-                }
-            }
+    @Override
+    protected void onPause() {
+        super.onPause();
 
-            @Override
-            public void onFailure(Call<List<Match>> call, Throwable t) {
-                Log.e("LIVE_FETCH", "Error: " + t.getMessage());
-            }
-        });
+        // Σταματά το auto refresh όταν φύγεις από τη σελίδα
+        handler.removeCallbacks(refreshRunnable);
     }
 }

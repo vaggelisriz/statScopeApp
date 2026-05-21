@@ -2,6 +2,7 @@ package com.example.frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,10 +15,13 @@ import retrofit2.Response;
 
 public class ScheduledMatchesActivity extends AppCompatActivity {
 
+    private static final String TAG = "ScheduledMatches";
+
     private RecyclerView recyclerView;
     private MatchAdapter adapter;
     private ImageButton btnBack;
-    private List<Match> scheduledMatches = new ArrayList<>();
+    // ✅ ΔΙΟΡΘΩΣΗ: η λίστα είναι final ώστε να τη μοιράζεται ο adapter
+    private final List<Match> scheduledMatches = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +29,17 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scheduled_matches);
 
         recyclerView = findViewById(R.id.rv_scheduled_matches);
-        btnBack = findViewById(R.id.btn_back_scheduled);
+        btnBack      = findViewById(R.id.btn_back_scheduled);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new MatchAdapter(this, new ArrayList<>(), match -> {});
+        // ✅ ΔΙΟΡΘΩΣΗ: ο adapter δημιουργείται ΜΙΑ ΦΟΡΑ εδώ με click listener
+        //    (ήταν: δημιουργούνταν νέος adapter σε κάθε API response → flicker + memory leaks)
+        adapter = new MatchAdapter(this, scheduledMatches, match -> {
+            Intent intent = new Intent(ScheduledMatchesActivity.this, MatchLiveControlActivity.class);
+            intent.putExtra("selected_match", match);
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
         btnBack.setOnClickListener(v -> finish());
@@ -42,8 +52,7 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
     }
 
     private void loadScheduledMatches() {
-        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
-        apiService.getAllMatches().enqueue(new Callback<List<Match>>() {
+        RetrofitClient.getApiService().getAllMatches().enqueue(new Callback<List<Match>>() {
             @Override
             public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -55,19 +64,14 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Ενημέρωση του adapter με τα πραγματικά δεδομένα
-                    adapter = new MatchAdapter(ScheduledMatchesActivity.this, scheduledMatches, match -> {
-                        Intent intent = new Intent(ScheduledMatchesActivity.this, MatchLiveControlActivity.class);
-                        intent.putExtra("selected_match", match);
-                        startActivity(intent);
-                    });
-                    recyclerView.setAdapter(adapter);
+                    // ✅ ΔΙΟΡΘΩΣΗ: ενημερώνουμε τον ήδη υπάρχοντα adapter
+                    adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Match>> call, Throwable t) {
-                // Αφαιρέσαμε το Toast και εδώ για να μη φαίνεται τίποτα αν αποτύχει
+                Log.e(TAG, "Failed to load scheduled matches: " + t.getMessage());
             }
         });
     }

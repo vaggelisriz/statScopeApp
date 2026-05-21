@@ -39,9 +39,27 @@ public class StartersAdapter extends RecyclerView.Adapter<StartersAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Player player = starters.get(position);
-        holder.tvName.setText(player.getName());
+
+        // Εμφάνιση: Ονοματεπώνυμο (Αριθμός Φανέλας)
+        String jerseyNumber = player.getNumber() != null ? player.getNumber() : "—";
+        String displayName = player.getName() + " (" + jerseyNumber + ")";
+        holder.tvName.setText(displayName);
+
         holder.tvPosition.setText(player.getPosition() != null ? player.getPosition() : "—");
-        holder.btnSwap.setOnClickListener(v -> listener.onSwapClick(player));
+
+        // Ακούει το κλικ σε ΟΛΟΚΛΗΡΗ τη σειρά του παίκτη για να μην κολλάει
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onSwapClick(player);
+            }
+        });
+
+        // Ακούει το κλικ και στο κουμπί ξεχωριστά
+        holder.btnSwap.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onSwapClick(player);
+            }
+        });
 
         // Μόνιμο Highlight για τους αλλαγμένους παίκτες
         if (player.isSubstituted()) {
@@ -49,18 +67,18 @@ public class StartersAdapter extends RecyclerView.Adapter<StartersAdapter.ViewHo
             holder.itemView.setBackgroundColor(android.graphics.Color.parseColor("#15242A"));
 
             holder.btnSwap.setText("CHANGED");
-            holder.btnSwap.setAlpha(0.7f);
+            holder.btnSwap.setEnabled(true); // Κρατάμε ενεργό το view
 
             View accentBar = holder.itemView.findViewById(R.id.accent_bar);
             if (accentBar != null) {
-                accentBar.setBackgroundColor(android.graphics.Color.parseColor("#FFB300")); // Πορτοκαλί accent για ειδοποίηση αλλαγής
+                accentBar.setBackgroundColor(android.graphics.Color.parseColor("#FFB300")); // Πορτοκαλί accent
             }
         } else {
             // Κανονική εμφάνιση βασικών
             holder.itemView.setBackgroundColor(android.graphics.Color.parseColor("#131833"));
 
             holder.btnSwap.setText("SUB OUT");
-            holder.btnSwap.setAlpha(1.0f);
+            holder.btnSwap.setEnabled(true);
 
             View accentBar = holder.itemView.findViewById(R.id.accent_bar);
             if (accentBar != null) {

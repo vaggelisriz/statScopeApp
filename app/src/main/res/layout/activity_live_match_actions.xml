@@ -88,6 +88,7 @@
             android:id="@+id/btn_add_statistics"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:layout_marginBottom="16dp"
             android:text="ADD LIVE STATISTICS"
             android:textColor="#00E676"
             android:textSize="16sp"
@@ -104,6 +105,28 @@
             app:iconSize="26dp"
             app:iconTint="#00E676"
             app:strokeColor="#00E676"
+            app:strokeWidth="1.5dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_finish_match"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="FINISH MATCH"
+            android:textColor="#FF5252"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:elevation="4dp"
+            android:stateListAnimator="@null"
+            app:backgroundTint="#131833"
+            app:rippleColor="#33FF5252"
+            app:cornerRadius="8dp"
+            app:icon="@android:drawable/ic_menu_close_clear_cancel"
+            app:iconGravity="textStart"
+            app:iconPadding="16dp"
+            app:iconSize="26dp"
+            app:iconTint="#FF5252"
+            app:strokeColor="#FF5252"
             app:strokeWidth="1.5dp" />
 
     </LinearLayout>
