@@ -38,10 +38,8 @@ public class MatchDetailsActivity extends AppCompatActivity {
         tvAwayName = findViewById(R.id.tv_detail_away);
         ivHomeLogo = findViewById(R.id.iv_detail_home_logo);
         ivAwayLogo = findViewById(R.id.iv_detail_away_logo);
-
         tvHomeLineupTitle = findViewById(R.id.tv_home_lineup_title);
         tvAwayLineupTitle = findViewById(R.id.tv_away_lineup_title);
-
         rvHome = findViewById(R.id.rv_home_players);
         rvAway = findViewById(R.id.rv_away_players);
         ImageButton btnBack = findViewById(R.id.btn_back_details);
@@ -61,30 +59,17 @@ public class MatchDetailsActivity extends AppCompatActivity {
             tvHomeName.setText(selectedMatch.getHomeTeam());
             tvAwayName.setText(selectedMatch.getAwayTeam());
 
-            if (selectedMatch.getHomeTeam() != null)
-                tvHomeLineupTitle.setText(selectedMatch.getHomeTeam().toUpperCase());
-            if (selectedMatch.getAwayTeam() != null)
-                tvAwayLineupTitle.setText(selectedMatch.getAwayTeam().toUpperCase());
+            if (selectedMatch.getHomeTeam() != null) tvHomeLineupTitle.setText(selectedMatch.getHomeTeam().toUpperCase());
+            if (selectedMatch.getAwayTeam() != null) tvAwayLineupTitle.setText(selectedMatch.getAwayTeam().toUpperCase());
 
-            Glide.with(this)
-                    .load(selectedMatch.getHomeLogo())
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .into(ivHomeLogo);
+            String baseUrl = "http://10.0.2.2/statScopeApp/backend/";
+            Glide.with(this).load(baseUrl + selectedMatch.getHomeLogo()).placeholder(android.R.drawable.ic_menu_gallery).into(ivHomeLogo);
+            Glide.with(this).load(baseUrl + selectedMatch.getAwayLogo()).placeholder(android.R.drawable.ic_menu_gallery).into(ivAwayLogo);
 
-            Glide.with(this)
-                    .load(selectedMatch.getAwayLogo())
-                    .placeholder(android.R.drawable.ic_menu_gallery)
-                    .into(ivAwayLogo);
-
-            // ✅ ΔΙΟΡΘΩΣΗ: καλούμε getMatchLineups αντί για getTeamPlayers
-            //    Έτσι εμφανίζεται η 11άδα του αγώνα, όχι ΟΛΟΙ οι παίκτες της ομάδας.
-            //    Μετά κάνουμε split βάσει team_id για home/away διαχωρισμό.
             fetchMatchLineups(selectedMatch.getId());
         }
 
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
-        }
+        if (btnBack != null) btnBack.setOnClickListener(v -> finish());
     }
 
     private void fetchMatchLineups(int matchId) {
@@ -93,22 +78,17 @@ public class MatchDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<LineupResponse> call, Response<LineupResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     List<Player> allPlayers = response.body().getPlayers();
-
                     List<Player> homePlayers = new ArrayList<>();
                     List<Player> awayPlayers = new ArrayList<>();
 
-                    // Διαχωρισμός παικτών σε home / away βάσει team_id
                     for (Player p : allPlayers) {
-                        if (p.getTeamId() == homeTeamId) {
-                            homePlayers.add(p);
-                        } else if (p.getTeamId() == awayTeamId) {
-                            awayPlayers.add(p);
-                        }
+                        if (p.getTeamId() == homeTeamId) homePlayers.add(p);
+                        else if (p.getTeamId() == awayTeamId) awayPlayers.add(p);
                     }
 
-                    rvHome.setAdapter(new PlayerAdapter(homePlayers, null));
-                    rvAway.setAdapter(new PlayerAdapter(awayPlayers, null));
-
+                    // ΔΙΟΡΘΩΣΗ: Χρησιμοποιούμε τον constructor που δέχεται μόνο τη λίστα
+                    rvHome.setAdapter(new PlayerAdapter(homePlayers));
+                    rvAway.setAdapter(new PlayerAdapter(awayPlayers));
                 } else {
                     Log.e(TAG, "getMatchLineups failed: HTTP " + response.code());
                 }

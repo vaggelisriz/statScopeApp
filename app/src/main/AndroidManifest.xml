@@ -36,6 +36,24 @@
         <!-- ✅ ΝΕΟ: Προστέθηκε η StatisticsActivity που ανοίγει από το LiveMatchActionsActivity -->
         <activity android:name=".StatisticsActivity"   android:exported="false" />
 
+        <activity
+            android:name=".FanActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChampionshipActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".FanMatchDetailsActivity"
+            android:exported="false" />
+
+        <activity android:name=".PlayerDetailsActivity"
+            android:exported="false" />
+
+        <activity android:name=".TeamRosterActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

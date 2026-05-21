@@ -8,6 +8,9 @@ public class Match implements Serializable {
     @SerializedName("id")
     private int id;
 
+    @SerializedName("championship_id")
+    private int championshipId;
+
     @SerializedName("home_team")
     private String homeTeam;
 
@@ -38,22 +41,38 @@ public class Match implements Serializable {
     @SerializedName("championship_name")
     private String championshipName;
 
-    // ─── Getters ─────────────────────────────────────────────────────────────
-    public int getId()                  { return id; }
-    public String getHomeTeam()         { return homeTeam; }
-    public String getAwayTeam()         { return awayTeam; }
-    public int getHomeScore()           { return homeScore; }
-    public int getAwayScore()           { return awayScore; }
-    public int getHomeTeamId()          { return homeTeamId; }
-    public int getAwayTeamId()          { return awayTeamId; }
-    public String getStatus()           { return status; }
-    public String getHomeLogo()         { return homeLogo; }
-    public String getAwayLogo()         { return awayLogo; }
+    // Constructor (απαραίτητος για τον φίλο σου)
+    public Match(int id, int championshipId, String homeTeam, String awayTeam, int homeScore, int awayScore,
+                 int homeTeamId, int awayTeamId, String status, String homeLogo, String awayLogo, String championshipName) {
+        this.id = id;
+        this.championshipId = championshipId;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+        this.homeTeamId = homeTeamId;
+        this.awayTeamId = awayTeamId;
+        this.status = status;
+        this.homeLogo = homeLogo;
+        this.awayLogo = awayLogo;
+        this.championshipName = championshipName;
+    }
+
+    // Getters
+    public int getId() { return id; }
+    public int getChampionshipId() { return championshipId; }
+    public String getHomeTeam() { return homeTeam; }
+    public String getAwayTeam() { return awayTeam; }
+    public int getHomeScore() { return homeScore; }
+    public int getAwayScore() { return awayScore; }
+    public int getHomeTeamId() { return homeTeamId; }
+    public int getAwayTeamId() { return awayTeamId; }
+    public String getStatus() { return status; }
+    public String getHomeLogo() { return homeLogo; }
+    public String getAwayLogo() { return awayLogo; }
     public String getChampionshipName() { return championshipName; }
 
-    // ─── Setters ─────────────────────────────────────────────────────────────
-    // ✅ ΔΙΟΡΘΩΣΗ: προστέθηκαν setters ώστε το LiveMatchActionsActivity να μπορεί
-    //    να ανανεώνει το σκορ τοπικά μετά από κάθε API call
+    // Setters (δικά σου)
     public void setHomeScore(int homeScore) { this.homeScore = homeScore; }
     public void setAwayScore(int awayScore) { this.awayScore = awayScore; }
     public void setStatus(String status)    { this.status = status; }

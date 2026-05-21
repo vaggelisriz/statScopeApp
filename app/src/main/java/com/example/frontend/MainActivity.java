@@ -50,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         else if ("Fan".equals(selectedRole)) {
-            // Εμφάνιση μηνύματος αφού δεν υπάρχει ακόμα οθόνη
-            Toast.makeText(MainActivity.this, "Fan mode coming soon!", Toast.LENGTH_SHORT).show();
+            // Ανοίγουμε το νέο Fan Activity
+            Intent intent = new Intent(MainActivity.this, FanActivity.class);
+            startActivity(intent);
         }
     }
 }
