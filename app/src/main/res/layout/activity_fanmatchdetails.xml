@@ -122,6 +122,33 @@
                 android:layout_marginBottom="16dp" />
 
             <TextView
+                android:id="@+id/tv_events_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MATCH PROGRESS"
+                android:textColor="#00E676"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:id="@+id/layout_events_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#0F1633"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_match_events"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:scrollbars="vertical"
+                    android:nestedScrollingEnabled="true" />
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/tv_lineups_main_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

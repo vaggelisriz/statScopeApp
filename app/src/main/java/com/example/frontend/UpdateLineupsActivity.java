@@ -119,7 +119,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
         RetrofitClient.getApiService()
                 .getMatchLineups(matchId)
-                .enqueue(new Callback<LineupResponse>() {
+                .enqueue(new Callback<LineupResponse>() { // Κρατήθηκε το LineupResponse
                     @Override
                     public void onResponse(@NonNull Call<LineupResponse> call, @NonNull Response<LineupResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -127,7 +127,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
                             if (players != null && !players.isEmpty()) {
                                 distributeExistingLineup(players);
-                                loadRemainingPlayersForBench();
                             } else {
                                 loadDefaultLineupFromTeams();
                             }
@@ -145,6 +144,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 });
     }
 
+    // 🛠️ ΔΙΟΡΘΩΘΗΚΕ: Με όλες τις αγκύλες και σωστό έλεγχο
     private void distributeExistingLineup(List<Player> players) {
         homeStarters.clear(); homeBench.clear();
         awayStarters.clear(); awayBench.clear();
@@ -152,10 +152,22 @@ public class UpdateLineupsActivity extends AppCompatActivity {
         for (Player p : players) {
             p.setStarter(true);
             if (p.getTeamId() == homeTeamId) {
-                homeStarters.add(p);
+                if (homeStarters.size() < STARTERS_COUNT) {
+                    homeStarters.add(p);
+                }
             } else if (p.getTeamId() == awayTeamId) {
-                awayStarters.add(p);
+                if (awayStarters.size() < STARTERS_COUNT) {
+                    awayStarters.add(p);
+                }
             }
+        }
+
+        if (homeStarters.size() < STARTERS_COUNT || awayStarters.size() < STARTERS_COUNT) {
+            homeStarters.clear();
+            awayStarters.clear();
+            loadDefaultLineupFromTeams();
+        } else {
+            loadRemainingPlayersForBench();
         }
     }
 
@@ -203,8 +215,11 @@ public class UpdateLineupsActivity extends AppCompatActivity {
         });
     }
 
+    // 🛠️ ΔΙΟΡΘΩΘΗΚΕ: Σύγκριση με getId()
     private void mergePlayersIntoBench(List<Player> allHome, List<Player> allAway) {
         runOnUiThread(() -> {
+            if (homeStarters.isEmpty() && awayStarters.isEmpty()) return;
+
             for (Player p : allHome) {
                 boolean isAlreadyStarter = false;
                 for (Player starter : homeStarters) {
@@ -354,10 +369,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
             if (outIdx != -1 && inIdx != -1) {
                 playerOut.setStarter(false);
-                playerOut.setSubstituted(false);
-
                 playerIn.setStarter(true);
-                playerIn.setSubstituted(true);
 
                 starters.set(outIdx, playerIn);
                 bench.set(inIdx, playerOut);
@@ -383,6 +395,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
         List<Integer> homeIds = extractIds(homeStarters);
         List<Integer> awayIds = extractIds(awayStarters);
 
+        // Κρατήθηκε η δική σου αρχική μέθοδος αποθήκευσης με τις 4 παραμέτρους
         RetrofitClient.getApiService()
                 .updateMatchStatusAndLineups(matchId, "live", homeIds, awayIds)
                 .enqueue(new Callback<StatusResponse>() {
@@ -391,7 +404,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                         showLoading(false);
                         btnSave.setEnabled(true);
 
-                        // Διόρθωση εδώ: χρησιμοποιούμε την έτοιμη μέθοδο response.isSuccessful() της Retrofit
                         if (response.isSuccessful()) {
                             finish();
                         } else {

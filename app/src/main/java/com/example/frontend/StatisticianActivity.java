@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class StatisticianActivity extends AppCompatActivity {
 
-    private Button btnSetMatchLive, btnManageMatches;
+    private Button btnSetMatchLive, btnManageMatches; // ✂️ Αφαιρέθηκε το btnManageStandings
     private ImageButton btnBack;
 
     @Override
@@ -16,9 +16,9 @@ public class StatisticianActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistician);
 
-        btnBack          = findViewById(R.id.btn_back_dashboard);
-        btnSetMatchLive  = findViewById(R.id.btn_set_match_live);
-        btnManageMatches = findViewById(R.id.btn_manage_matches);
+        btnBack            = findViewById(R.id.btn_back_dashboard);
+        btnSetMatchLive    = findViewById(R.id.btn_set_match_live);
+        btnManageMatches   = findViewById(R.id.btn_manage_matches); // 🛠️ Εδώ μπαίνεις για τη διαχείριση των αγώνων
 
         // Επιστροφή στην MainActivity
         btnBack.setOnClickListener(v -> finish());
@@ -29,7 +29,7 @@ public class StatisticianActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Ανοίγει τη λίστα Live ματς → για να διαχειριστεί αγώνα που τρέχει
+        // Ανοίγει τη λίστα Live ματς → για να διαχειριστεί αγώνα που τρέχει (και τα Lineups του)
         btnManageMatches.setOnClickListener(v -> {
             Intent intent = new Intent(StatisticianActivity.this, LiveMatchesActivity.class);
             startActivity(intent);

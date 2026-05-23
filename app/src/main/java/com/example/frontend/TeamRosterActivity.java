@@ -24,6 +24,7 @@ import okhttp3.Response;
 public class TeamRosterActivity extends AppCompatActivity {
 
     private int teamId;
+    private String currentTeamName = "";
 
     // Views Metadata & Stats
     private ImageView ivTeamLogo, ivCompArrow;
@@ -98,7 +99,7 @@ public class TeamRosterActivity extends AppCompatActivity {
 
                     // 1. Parse Metadata
                     JSONObject metaObj = jsonObject.getJSONObject("team_metadata");
-                    String name = metaObj.getString("name");
+                    currentTeamName = metaObj.getString("name");
                     String city = metaObj.getString("city");
                     String logoUrl = metaObj.getString("logo");
 
@@ -125,7 +126,7 @@ public class TeamRosterActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (!isFinishing() && !isDestroyed()) {
                             // Set Metadata
-                            tvTeamName.setText(name);
+                            tvTeamName.setText(currentTeamName);
                             tvTeamCity.setText(city);
                             Glide.with(this).load(logoUrl).into(ivTeamLogo);
 
@@ -178,6 +179,7 @@ public class TeamRosterActivity extends AppCompatActivity {
                             }
 
                             // Notify Adapter for Roster
+                            rosterAdapter.setTeamName(currentTeamName);
                             rosterAdapter.notifyDataSetChanged();
                         }
                     });

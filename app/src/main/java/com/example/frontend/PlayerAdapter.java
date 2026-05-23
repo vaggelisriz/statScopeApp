@@ -136,4 +136,8 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             cbStarter = itemView.findViewById(R.id.cb_is_starter);
         }
     }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
 }

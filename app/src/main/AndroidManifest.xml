@@ -54,6 +54,9 @@
         <activity android:name=".TeamRosterActivity"
             android:exported="false" />
 
+        <activity android:name=".LiveStatsActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

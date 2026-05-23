@@ -2,12 +2,18 @@ package com.example.frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,20 +49,38 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private TextView tvStatHomeCorners, tvStatAwayCorners;
     private TextView tvStatHomeMistakes, tvStatAwayMistakes;
 
+    // 🌟 Διορθωμένο: Μετατροπή των βασικών TextViews της κορυφής σε καθολικές μεταβλητές (Global)
+    private TextView tvDetailHome, tvDetailAway, tvScore;
+
+    // 🆕 Μεταβλητές για το Live Feed των Συμβάντων (Διορθωμένο σε List<JSONObject>)
+    private RecyclerView rvMatchEvents;
+    private final List<JSONObject> eventsList = new ArrayList<>();
+    private EventLogAdapter eventLogAdapter;
+
+    // LIVE Polling
+    private final Handler liveHandler = new Handler(android.os.Looper.getMainLooper());
+    private Runnable liveRunnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fanmatchdetails);
 
-        // 1. Σύνδεση των βασικών Views
+        // 1. Σύνδεση των βασικών Views (Διορθωμένο: Χρήση των global μεταβλητών)
         ImageButton btnBack = findViewById(R.id.btn_back_details);
-        TextView tvHomeTeam = findViewById(R.id.tv_detail_home);
-        TextView tvAwayTeam = findViewById(R.id.tv_detail_away);
-        TextView tvScore = findViewById(R.id.tv_detail_score);
+        tvDetailHome = findViewById(R.id.tv_detail_home);
+        tvDetailAway = findViewById(R.id.tv_detail_away);
+        tvScore = findViewById(R.id.tv_detail_score);
         ImageView ivHomeLogo = findViewById(R.id.iv_detail_home_logo);
         ImageView ivAwayLogo = findViewById(R.id.iv_detail_away_logo);
 
-        // 2. Σύνδεση των Expandable Views (Headers & Arrows)
+        // 2. Σύνδεση και setup του Live Feed Adapter
+        rvMatchEvents = findViewById(R.id.rv_match_events);
+        rvMatchEvents.setLayoutManager(new LinearLayoutManager(this));
+        eventLogAdapter = new EventLogAdapter(eventsList);
+        rvMatchEvents.setAdapter(eventLogAdapter);
+
+        // 3. Σύνδεση των Expandable Views (Headers & Arrows)
         LinearLayout layoutHomeHeader = findViewById(R.id.layout_home_header);
         LinearLayout layoutAwayHeader = findViewById(R.id.layout_away_header);
         TextView tvHomeHeaderTitle = findViewById(R.id.tv_home_header_title);
@@ -64,7 +88,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         ivHomeArrow = findViewById(R.id.iv_home_arrow);
         ivAwayArrow = findViewById(R.id.iv_away_arrow);
 
-        // 3. Σύνδεση όλων των Views για τα Stats (16 συνολικά FindViewById)
+        // 4. Σύνδεση όλων των Views για τα Stats (16 συνολικά FindViewById)
         tvStatHomeShots = findViewById(R.id.tv_stat_home_shots);
         tvStatAwayShots = findViewById(R.id.tv_stat_away_shots);
         tvStatHomePasses = findViewById(R.id.tv_stat_home_passes);
@@ -98,8 +122,8 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             String awayLogo = getIntent().getStringExtra("AWAY_LOGO");
 
             // Εμφάνιση στο Scoreboard
-            tvHomeTeam.setText(homeTeam);
-            tvAwayTeam.setText(awayTeam);
+            tvDetailHome.setText(homeTeam);
+            tvDetailAway.setText(awayTeam);
             tvScore.setText(homeScore + " - " + awayScore);
 
             // Δυναμική μετονομασία των πτυσσόμενων κουμπιών με το όνομα της ομάδας
@@ -110,10 +134,6 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             Glide.with(this).load(awayLogo).into(ivAwayLogo);
         }
 
-        // ====================================================================
-        // ΝΕΑ ΛΕΙΤΟΥΡΓΙΚΟΤΗΤΑ: CLICK LISTENERS ΓΙΑ ΜΕΤΑΒΑΣΗ ΣΤΟ TEAM PROFILE
-        // ====================================================================
-
         // Click Listener για τη Γηπεδούχο Ομάδα (Home Team)
         View.OnClickListener homeTeamClickListener = v -> {
             if (homeTeamId != -1) {
@@ -123,7 +143,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             }
         };
         ivHomeLogo.setOnClickListener(homeTeamClickListener);
-        tvHomeTeam.setOnClickListener(homeTeamClickListener);
+        tvDetailHome.setOnClickListener(homeTeamClickListener);
 
         // Click Listener για τη Φιλοξενούμενη Ομάδα (Away Team)
         View.OnClickListener awayTeamClickListener = v -> {
@@ -134,9 +154,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             }
         };
         ivAwayLogo.setOnClickListener(awayTeamClickListener);
-        tvAwayTeam.setOnClickListener(awayTeamClickListener);
-
-        // ====================================================================
+        tvDetailAway.setOnClickListener(awayTeamClickListener);
 
         // 5. Setup των RecyclerViews
         setupLineupsRecyclerViews();
@@ -155,6 +173,26 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
 
         // Back Button
         btnBack.setOnClickListener(v -> finish());
+
+        liveRunnable = new Runnable() {
+            @Override
+            public void run() {
+                fetchMatchStatsFromBackend();
+                liveHandler.postDelayed(this, 5000);
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        liveHandler.post(liveRunnable); // Έναρξη live polling
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        liveHandler.removeCallbacks(liveRunnable); // Σταμάτημα polling για οικονομία μπαταρίας
     }
 
     private void setupLineupsRecyclerViews() {
@@ -216,65 +254,104 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         }).start();
     }
 
-    // Τράβηγμα στατιστικών από το getMatchStats.php API
+    // Τράβηγμα στατιστικών από το getMatchStats.php και getMatchEvents.php APIs
     private void fetchMatchStatsFromBackend() {
         new Thread(() -> {
             try {
-                String url = Config.BASE_URL+"/getMatchStats.php?match_id=" + matchId;
-
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(url).build();
-                Response response = client.newCall(request).execute();
 
-                if (response.isSuccessful() && response.body() != null) {
-                    String jsonResponse = response.body().string();
+                // ─────────────────────────────────────────────────────────────────
+                // 🌟 CALL 1: Τραβάμε τα 16 αριθμητικά στατιστικά (getMatchStats.php)
+                // ─────────────────────────────────────────────────────────────────
+                String urlStats = Config.BASE_URL + "/getMatchStats.php?match_id=" + matchId;
+                Request requestStats = new Request.Builder().url(urlStats).build();
+                Response responseStats = client.newCall(requestStats).execute();
+
+                String homeShots = "0", awayShots = "0", homePasses = "0", awayPasses = "0";
+                String homeFouls = "0", awayFouls = "0", homeCards = "0", awayCards = "0";
+                String homeAssists = "0", awayAssists = "0", homeTackles = "0", awayTackles = "0";
+                String homeCorners = "0", awayCorners = "0", homeMistakes = "0", awayMistakes = "0";
+
+                if (responseStats.isSuccessful() && responseStats.body() != null) {
+                    String jsonResponse = responseStats.body().string();
                     JSONObject jsonObject = new JSONObject(jsonResponse);
 
-                    // Ανάγνωση ΟΛΩΝ των τιμών από το JSON αντικείμενο
-                    String homeShots = jsonObject.getString("home_shots");
-                    String awayShots = jsonObject.getString("away_shots");
-                    String homePasses = jsonObject.getString("home_passes");
-                    String awayPasses = jsonObject.getString("away_passes");
-                    String homeFouls = jsonObject.getString("home_fouls");
-                    String awayFouls = jsonObject.getString("away_fouls");
-                    String homeCards = jsonObject.getString("home_cards");
-                    String awayCards = jsonObject.getString("away_cards");
-
-                    String homeAssists = jsonObject.getString("home_assists");
-                    String awayAssists = jsonObject.getString("away_assists");
-                    String homeTackles = jsonObject.getString("home_tackles");
-                    String awayTackles = jsonObject.getString("away_tackles");
-                    String homeCorners = jsonObject.getString("home_corners");
-                    String awayCorners = jsonObject.getString("away_corners");
-                    String homeMistakes = jsonObject.getString("home_mistakes");
-                    String awayMistakes = jsonObject.getString("away_mistakes");
-
-                    // Ασφαλής ενημέρωση ΟΛΩΝ των TextViews στο Main Thread
-                    runOnUiThread(() -> {
-                        if (!isFinishing() && !isDestroyed()) {
-                            tvStatHomeShots.setText(homeShots);
-                            tvStatAwayShots.setText(awayShots);
-                            tvStatHomePasses.setText(homePasses);
-                            tvStatAwayPasses.setText(awayPasses);
-                            tvStatHomeFouls.setText(homeFouls);
-                            tvStatAwayFouls.setText(awayFouls);
-                            tvStatHomeCards.setText(homeCards);
-                            tvStatAwayCards.setText(awayCards);
-
-                            tvStatHomeAssists.setText(homeAssists);
-                            tvStatAwayAssists.setText(awayAssists);
-                            tvStatHomeTackles.setText(homeTackles);
-                            tvStatAwayTackles.setText(awayTackles);
-                            tvStatHomeCorners.setText(homeCorners);
-                            tvStatAwayCorners.setText(awayCorners);
-                            tvStatHomeMistakes.setText(homeMistakes);
-                            tvStatAwayMistakes.setText(awayMistakes);
-                        }
-                    });
+                    homeShots = jsonObject.getString("home_shots");
+                    awayShots = jsonObject.getString("away_shots");
+                    homePasses = jsonObject.getString("home_passes");
+                    awayPasses = jsonObject.getString("away_passes");
+                    homeFouls = jsonObject.getString("home_fouls");
+                    awayFouls = jsonObject.getString("away_fouls");
+                    homeCards = jsonObject.getString("home_cards");
+                    awayCards = jsonObject.getString("away_cards");
+                    homeAssists = jsonObject.getString("home_assists");
+                    awayAssists = jsonObject.getString("away_assists");
+                    homeTackles = jsonObject.getString("home_tackles");
+                    awayTackles = jsonObject.getString("away_tackles");
+                    homeCorners = jsonObject.getString("home_corners");
+                    awayCorners = jsonObject.getString("away_corners");
+                    homeMistakes = jsonObject.getString("home_mistakes");
+                    awayMistakes = jsonObject.getString("away_mistakes");
                 }
+
+                // ─────────────────────────────────────────────────────────────────
+                // 🌟 CALL 2: Τραβάμε τις live ενέργειες από το δικό σου getMatchEvents.php
+                // ─────────────────────────────────────────────────────────────────
+                String urlEvents = Config.BASE_URL + "/getMatchEvents.php?match_id=" + matchId;
+                Request requestEvents = new Request.Builder().url(urlEvents).build();
+                Response responseEvents = client.newCall(requestEvents).execute();
+
+                final List<JSONObject> fetchedEvents = new ArrayList<>();
+                if (responseEvents.isSuccessful() && responseEvents.body() != null) {
+                    String jsonEvents = responseEvents.body().string();
+                    JSONArray jsonArray = new JSONArray(jsonEvents);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        fetchedEvents.add(jsonArray.getJSONObject(i));
+                    }
+                }
+
+                // ─────────────────────────────────────────────────────────────────
+                // 🌟 CALL 3: Ανανέωση του UI στο Main Thread
+                // ─────────────────────────────────────────────────────────────────
+                final String fHomeShots = homeShots; final String fAwayShots = awayShots;
+                final String fHomePasses = homePasses; final String fAwayPasses = awayPasses;
+                final String fHomeFouls = homeFouls; final String fAwayFouls = awayFouls;
+                final String fHomeCards = homeCards; final String fAwayCards = awayCards;
+                final String fHomeAssists = homeAssists; final String fAwayAssists = awayAssists;
+                final String fHomeTackles = homeTackles; final String fAwayTackles = awayTackles;
+                final String fHomeCorners = homeCorners; final String fAwayCorners = awayCorners;
+                final String fHomeMistakes = homeMistakes; final String fAwayMistakes = awayMistakes;
+
+                runOnUiThread(() -> {
+                    if (!isFinishing() && !isDestroyed()) {
+                        // Γεμίζουμε το Live Feed (που πλέον δέχεται JSONObject)
+                        eventsList.clear();
+                        eventsList.addAll(fetchedEvents);
+                        eventLogAdapter.notifyDataSetChanged();
+
+                        // Ενημερώνουμε τα TextViews των στατιστικών
+                        tvStatHomeShots.setText(fHomeShots);
+                        tvStatAwayShots.setText(fAwayShots);
+                        tvStatHomePasses.setText(fHomePasses);
+                        tvStatAwayPasses.setText(fAwayPasses);
+                        tvStatHomeFouls.setText(fHomeFouls);
+                        tvStatAwayFouls.setText(fAwayFouls);
+                        tvStatHomeCards.setText(fHomeCards);
+                        tvStatAwayCards.setText(fAwayCards);
+                        tvStatHomeAssists.setText(fHomeAssists);
+                        tvStatAwayAssists.setText(fAwayAssists);
+                        tvStatHomeTackles.setText(fHomeTackles);
+                        tvStatAwayTackles.setText(fAwayTackles);
+                        tvStatHomeCorners.setText(fHomeCorners);
+                        tvStatAwayCorners.setText(fAwayCorners);
+                        tvStatHomeMistakes.setText(fHomeMistakes);
+                        tvStatAwayMistakes.setText(fAwayMistakes);
+                    }
+                });
+
             } catch (Exception e) {
-                Log.e("MatchStats", "Error fetching stats: " + e.getMessage());
-                e.printStackTrace();
+                Log.e("MatchStats", "Error: " + e.getMessage());
             }
         }).start();
     }
@@ -286,6 +363,75 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         } else {
             recyclerView.setVisibility(View.GONE);
             arrowIcon.setImageResource(android.R.drawable.arrow_down_float);
+        }
+    }
+
+    // 🌟 Διορθωμένος και πλήρης Adapter με σωστά ονόματα και Global Views
+    private class EventLogAdapter extends RecyclerView.Adapter<EventLogAdapter.ViewHolder> {
+        private final List<JSONObject> logs;
+
+        EventLogAdapter(List<JSONObject> logs) { this.logs = logs; }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            // Φουσκώνουμε το item_live_event_text.xml που μου έδωσες
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_live_event, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            try {
+                JSONObject statObj = logs.get(position);
+
+                // Διαβάζουμε τα δεδομένα από το getMatchEvents.php
+                String teamName = statObj.optString("team_name", "");
+                String playerName = statObj.optString("player_name", "Παίκτης");
+                String eventType = statObj.optString("event_type", "").toUpperCase().replace("_", " ");
+
+                // 🎯 Φτιάχνουμε το String στη μορφή που θες: "Player (EVENT)."
+                String formattedText = playerName + " (" + eventType + ").";
+                holder.tvEventText.setText(formattedText);
+
+                // Παίρνουμε το όνομα της Home Team από το global TextView της Activity
+                String homeTeamTitle = tvDetailHome.getText().toString();
+
+                // Παίρνουμε τις παραμέτρους διάταξης του TextView (είναι FrameLayout.LayoutParams επειδή το root είναι FrameLayout!)
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.tvEventText.getLayoutParams();
+
+                if (teamName.equalsIgnoreCase(homeTeamTitle)) {
+                    // 🏠 ΕΝΤΟΣ ΕΔΡΑΣ: Στοίχιση Αριστερά, Λευκό χρώμα
+                    params.gravity = android.view.Gravity.START | android.view.Gravity.CENTER_VERTICAL;
+                    holder.tvEventText.setTextColor(android.graphics.Color.WHITE);
+                } else {
+                    // 🚀 ΕΚΤΟΣ ΕΔΡΑΣ: Στοίχιση Δεξιά, Γκρι-μπλε χρώμα
+                    params.gravity = android.view.Gravity.END | android.view.Gravity.CENTER_VERTICAL;
+                    holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#8A92B2"));
+                }
+
+                holder.tvEventText.setLayoutParams(params);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() { return logs.size(); }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            android.widget.FrameLayout parentLayout; // 🆕 Αλλαγή σε FrameLayout
+            TextView tvEventText;
+
+            ViewHolder(View v) {
+                super(v);
+                // Το 'v' είναι το ίδιο το FrameLayout από το XML σου
+                parentLayout = (android.widget.FrameLayout) v;
+
+                // Σύνδεση με το ID του TextView
+                tvEventText = v.findViewById(R.id.tv_live_event_text);
+            }
         }
     }
 }

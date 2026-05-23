@@ -16,7 +16,7 @@ public class MatchRepository {
     private final ApiService apiService;
 
     public MatchRepository() {
-        apiService = RetrofitClient.getClient().create(ApiService.class);
+        apiService = RetrofitClient.getClient().create(ApiService.class); //
     }
 
     // ─── Φέρνει μόνο τα live ματς ───────────────────────────────────────────
@@ -25,29 +25,29 @@ public class MatchRepository {
             MutableLiveData<Boolean> isLoading,
             MutableLiveData<String> error) {
 
-        isLoading.setValue(true);
+        isLoading.setValue(true); //
 
-        apiService.getAllMatches().enqueue(new Callback<List<Match>>() {
+        apiService.getAllMatches().enqueue(new Callback<List<Match>>() { //
             @Override
             public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
-                isLoading.postValue(false);
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Match> live = new ArrayList<>();
-                    for (Match m : response.body()) {
-                        if ("live".equalsIgnoreCase(m.getStatus())) {
-                            live.add(m);
+                isLoading.postValue(false); //
+                if (response.isSuccessful() && response.body() != null) { //
+                    List<Match> live = new ArrayList<>(); //
+                    for (Match m : response.body()) { //
+                        if ("live".equalsIgnoreCase(m.getStatus())) { //
+                            live.add(m); //
                         }
                     }
-                    result.postValue(live);
+                    result.postValue(live); //
                 } else {
-                    error.postValue("Server error: " + response.code());
+                    error.postValue("Server error: " + response.code()); //
                 }
             }
 
             @Override
             public void onFailure(Call<List<Match>> call, Throwable t) {
-                isLoading.postValue(false);
-                error.postValue("Network error: " + t.getMessage());
+                isLoading.postValue(false); //
+                error.postValue("Network error: " + t.getMessage()); //
             }
         });
     }
@@ -60,22 +60,50 @@ public class MatchRepository {
             MutableLiveData<Boolean> success,
             MutableLiveData<String> error) {
 
-        apiService.updateScore(matchId, homeScore, awayScore)
-                .enqueue(new Callback<StatusResponse>() {
+        apiService.updateScore(matchId, homeScore, awayScore) //
+                .enqueue(new Callback<StatusResponse>() { //
                     @Override
                     public void onResponse(Call<StatusResponse> call, Response<StatusResponse> response) {
-                        if (response.isSuccessful() && response.body() != null
-                                && response.body().isSuccess()) {
-                            success.postValue(true);
+                        if (response.isSuccessful() && response.body() != null //
+                                && response.body().isSuccess()) { //
+                            success.postValue(true); //
                         } else {
-                            error.postValue("Score update failed: " + response.code());
+                            error.postValue("Score update failed: " + response.code()); //
                         }
                     }
 
                     @Override
                     public void onFailure(Call<StatusResponse> call, Throwable t) {
-                        error.postValue("Network error: " + t.getMessage());
+                        error.postValue("Network error: " + t.getMessage()); //
                     }
                 });
+    }
+
+    // ─── 🆕 Φέρνει τη Βαθμολογία του Πρωταθλήματος ─────────────────────────────
+    public void fetchChampionshipStandings(
+            int championshipId,
+            MutableLiveData<List<TeamStanding>> result,
+            MutableLiveData<Boolean> isLoading,
+            MutableLiveData<String> error) {
+
+        isLoading.setValue(true);
+
+        apiService.getChampionshipStandings(championshipId).enqueue(new Callback<List<TeamStanding>>() {
+            @Override
+            public void onResponse(Call<List<TeamStanding>> call, Response<List<TeamStanding>> response) {
+                isLoading.postValue(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
+                } else {
+                    error.postValue("Server error fetching standings: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TeamStanding>> call, Throwable t) {
+                isLoading.postValue(false);
+                error.postValue("Network error: " + t.getMessage());
+            }
+        });
     }
 }

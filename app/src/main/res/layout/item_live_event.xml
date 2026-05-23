@@ -1,50 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp"
-    android:layout_marginHorizontal="2dp"
-    app:cardBackgroundColor="#131833"
-    app:cardCornerRadius="6dp"
-    app:cardElevation="0dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_live_event_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical">
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:text="Player (EVENT)." />
 
-        <TextView
-            android:id="@+id/tv_feed_player_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Player Name"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_feed_event_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:text="SHOT"
-            android:textColor="#00E676"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:background="#1A00E676"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"/>
-
-        <TextView
-            android:id="@+id/tv_feed_outcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Goal"
-            android:textColor="#888888"
-            android:textSize="13sp" />
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+</FrameLayout>

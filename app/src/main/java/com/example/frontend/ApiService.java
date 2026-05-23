@@ -61,6 +61,16 @@ public interface ApiService {
             @Field("away_score")  int awayScore
     );
 
+    @FormUrlEncoded
+    @POST("saveEvent.php")
+    Call<StatusResponse> saveLiveEvent( // 🛠️ ΑΛΛΑΓΗ ΟΝΟΜΑΤΟΣ ΕΔΩ
+                                        @Field("match_id") int matchId,
+                                        @Field("player_id") int playerId,
+                                        @Field("event_type") String eventType,
+                                        @Field("outcome") String outcome,
+                                        @Field("event_minute") int eventMinute
+    );
+
     // ─── POST: Διαγραφή στατιστικού ─────────────────────────────────────────
     // ✅ ΝΕΟΣ ENDPOINT: deleteMatchStatistic.php
     @FormUrlEncoded
@@ -71,4 +81,12 @@ public interface ApiService {
             @Field("event_type")  String eventType,
             @Field("outcome")     String outcome
     );
+
+    @GET("getStandings.php")
+    Call<List<TeamStanding>> getChampionshipStandings(@Query("championship_id") int championshipId);
+
+    @FormUrlEncoded
+    @POST("finishMatch.php")
+    Call<StatusResponse> finishMatch(@Field("match_id") int matchId);
+
 }
