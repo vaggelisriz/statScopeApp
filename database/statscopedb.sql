@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Εξυπηρετητής: localhost
--- Χρόνος δημιουργίας: 15 Μάη 2026 στις 18:18:45
--- Έκδοση διακομιστή: 10.4.28-MariaDB
--- Έκδοση PHP: 8.0.28
+-- Εξυπηρετητής: 127.0.0.1
+-- Χρόνος δημιουργίας: 24 Μάη 2026 στις 10:33:19
+-- Έκδοση διακομιστή: 10.4.32-MariaDB
+-- Έκδοση PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -64,19 +64,14 @@ CREATE TABLE `matches` (
 --
 
 INSERT INTO `matches` (`id`, `championship_id`, `home_team_id`, `away_team_id`, `match_round`, `home_score`, `away_score`, `status`) VALUES
-(79, 1, 1, 4, 1, 0, 0, 'live'),
-(80, 1, 2, 3, 1, 0, 0, 'live'),
+(79, 1, 1, 4, 1, 0, 0, 'completed'),
+(80, 1, 2, 3, 1, 0, 1, 'completed'),
 (81, 1, 1, 3, 2, 0, 0, 'scheduled'),
 (82, 1, 4, 2, 2, 0, 0, 'scheduled'),
-(83, 1, 1, 2, 3, 0, 0, 'scheduled'),
-(84, 1, 3, 4, 3, 0, 0, 'live'),
-(85, 2, 1, 4, 1, 0, 0, 'live'),
-(86, 2, 2, 3, 1, 0, 0, 'live'),
-(87, 2, 1, 3, 2, 0, 0, 'scheduled'),
-(88, 2, 4, 2, 2, 0, 0, 'live'),
+(83, 1, 1, 2, 3, 1, 0, 'live'),
+(87, 2, 1, 3, 2, 0, 0, 'live'),
 (89, 2, 1, 2, 3, 0, 0, 'scheduled'),
-(90, 2, 3, 4, 3, 0, 0, 'scheduled'),
-(91, 3, 4, 3, 1, 0, 0, 'live');
+(90, 2, 3, 4, 3, 0, 0, 'live');
 
 -- --------------------------------------------------------
 
@@ -93,6 +88,68 @@ CREATE TABLE `match_events` (
   `event_minute` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Άδειασμα δεδομένων του πίνακα `match_events`
+--
+
+INSERT INTO `match_events` (`id`, `match_id`, `player_id`, `event_type`, `outcome`, `event_minute`) VALUES
+(8, 80, 607, 'shot', 'goal', 12),
+(9, 80, 607, 'shot', 'saved', 25),
+(10, 80, 607, 'shot', 'off_target', 44),
+(11, 80, 607, 'shot', 'blocked', 60),
+(12, 80, 607, 'shot', 'off_target', 75),
+(13, 80, 607, 'pass', 'success', 5),
+(14, 80, 607, 'pass', 'success', 8),
+(15, 80, 607, 'pass', 'success', 15),
+(16, 80, 607, 'pass', 'failure', 22),
+(17, 80, 607, 'pass', 'success', 30),
+(18, 80, 607, 'pass', 'success', 55),
+(19, 80, 607, 'pass', 'success', 70),
+(20, 80, 607, 'pass', 'failure', 88),
+(21, 80, 607, 'foul_committed', 'success', 14),
+(22, 80, 607, 'foul_committed', 'success', 33),
+(23, 80, 607, 'foul_committed', 'success', 52),
+(24, 80, 607, 'foul_committed', 'success', 81),
+(25, 80, 607, 'card_yellow', 'success', 33),
+(26, 80, 607, 'card_yellow', 'success', 89),
+(27, 80, 607, 'assist', 'success', 12),
+(28, 80, 607, 'assist', 'success', 65),
+(29, 80, 607, 'tackle', 'success', 20),
+(30, 80, 607, 'tackle', 'success', 41),
+(31, 80, 607, 'tackle', 'failure', 73),
+(32, 80, 607, 'corner_won', 'success', 10),
+(33, 80, 607, 'corner_won', 'success', 28),
+(34, 80, 607, 'corner_won', 'success', 61),
+(35, 80, 607, 'corner_won', 'success', 84),
+(36, 80, 607, 'mistake', 'success', 40),
+(37, 80, 2722, 'shot', 'saved', 18),
+(38, 80, 2722, 'shot', 'off_target', 50),
+(39, 80, 2722, 'shot', 'blocked', 82),
+(40, 80, 2722, 'pass', 'success', 11),
+(41, 80, 2722, 'pass', 'success', 24),
+(42, 80, 2722, 'pass', 'failure', 47),
+(43, 80, 2722, 'pass', 'success', 66),
+(44, 80, 2722, 'pass', 'success', 80),
+(45, 80, 2722, 'foul_committed', 'success', 36),
+(46, 80, 2722, 'foul_committed', 'success', 71),
+(47, 80, 2722, 'card_yellow', 'success', 71),
+(48, 80, 2722, 'tackle', 'success', 4),
+(49, 80, 2722, 'tackle', 'success', 19),
+(50, 80, 2722, 'tackle', 'success', 45),
+(51, 80, 2722, 'tackle', 'failure', 58),
+(52, 80, 2722, 'tackle', 'success', 87),
+(53, 80, 2722, 'corner_won', 'success', 15),
+(54, 80, 2722, 'corner_won', 'success', 77),
+(55, 80, 2722, 'mistake', 'success', 22),
+(56, 80, 2722, 'mistake', 'success', 59),
+(57, 80, 2722, 'mistake', 'success', 90),
+(58, 80, 2722, 'shot', 'goal', 0),
+(59, 83, 26848, '', '', 0),
+(60, 83, 2164, 'shot', 'goal', 0),
+(61, 83, 2164, '', '', 0),
+(62, 83, 579, 'assist', '', 0),
+(67, 83, 684, 'card_yellow', '', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -104,6 +161,100 @@ CREATE TABLE `match_lineups` (
   `match_id` int(11) NOT NULL,
   `player_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Άδειασμα δεδομένων του πίνακα `match_lineups`
+--
+
+INSERT INTO `match_lineups` (`id`, `match_id`, `player_id`) VALUES
+(23, 80, 179),
+(24, 80, 513),
+(25, 80, 607),
+(26, 80, 969),
+(27, 80, 1627),
+(28, 80, 2361),
+(29, 80, 2385),
+(30, 80, 6697),
+(31, 80, 8777),
+(32, 80, 26828),
+(33, 80, 26848),
+(34, 80, 118),
+(35, 80, 971),
+(36, 80, 1591),
+(37, 80, 1605),
+(38, 80, 2355),
+(39, 80, 2722),
+(40, 80, 6064),
+(41, 80, 10157),
+(42, 80, 41130),
+(43, 80, 42315),
+(44, 80, 47281),
+(67, 87, 287),
+(68, 87, 579),
+(69, 87, 684),
+(70, 87, 1217),
+(71, 87, 1604),
+(72, 87, 2164),
+(73, 87, 2878),
+(74, 87, 2374),
+(75, 87, 14394),
+(76, 87, 18760),
+(77, 87, 25310),
+(78, 87, 971),
+(79, 87, 118),
+(80, 87, 1591),
+(81, 87, 1605),
+(82, 87, 2355),
+(83, 87, 2722),
+(84, 87, 6064),
+(85, 87, 10157),
+(86, 87, 41130),
+(87, 87, 42315),
+(88, 87, 47281),
+(89, 90, 118),
+(90, 90, 971),
+(91, 90, 1591),
+(92, 90, 1605),
+(93, 90, 2355),
+(94, 90, 2722),
+(95, 90, 6064),
+(96, 90, 10157),
+(97, 90, 41130),
+(98, 90, 42315),
+(99, 90, 47281),
+(100, 90, 606),
+(101, 90, 206),
+(102, 90, 1818),
+(103, 90, 1828),
+(104, 90, 1835),
+(105, 90, 1986),
+(106, 90, 2118),
+(107, 90, 2475),
+(108, 90, 7398),
+(109, 90, 7627),
+(110, 90, 8543),
+(111, 83, 287),
+(112, 83, 579),
+(113, 83, 684),
+(114, 83, 1217),
+(115, 83, 2164),
+(116, 83, 2374),
+(117, 83, 2878),
+(118, 83, 14394),
+(119, 83, 18760),
+(120, 83, 21996),
+(121, 83, 25310),
+(122, 83, 179),
+(123, 83, 513),
+(124, 83, 969),
+(125, 83, 1627),
+(126, 83, 2361),
+(127, 83, 2385),
+(128, 83, 6697),
+(129, 83, 8777),
+(130, 83, 26828),
+(131, 83, 26848),
+(132, 83, 30393);
 
 -- --------------------------------------------------------
 
@@ -679,13 +830,13 @@ ALTER TABLE `matches`
 -- AUTO_INCREMENT για πίνακα `match_events`
 --
 ALTER TABLE `match_events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT για πίνακα `match_lineups`
 --
 ALTER TABLE `match_lineups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT για πίνακα `players`
