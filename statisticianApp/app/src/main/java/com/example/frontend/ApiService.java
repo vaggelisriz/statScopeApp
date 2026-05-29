@@ -37,8 +37,7 @@ public interface ApiService {
             @Field("away_starters[]")   List<Integer> awayStarters
     );
 
-    // ─── POST: Αποθήκευση event (γκολ, κάρτα κλπ) ───────────────────────────
-    // ✅ ΝΕΟΣ ENDPOINT: saveEvent.php — ενημερώνει αυτόματα το σκορ αν είναι γκολ
+    //ενημερώνει αυτόματα το σκορ αν είναι γκολ
     @FormUrlEncoded
     @POST("addMatchStatistic.php")
     Call<StatusResponse> addMatchStatistic(
@@ -82,8 +81,6 @@ public interface ApiService {
             @Field("outcome")     String outcome
     );
 
-    @GET("getStandings.php")
-    Call<List<TeamStanding>> getChampionshipStandings(@Query("championship_id") int championshipId);
 
     @FormUrlEncoded
     @POST("finishMatch.php")

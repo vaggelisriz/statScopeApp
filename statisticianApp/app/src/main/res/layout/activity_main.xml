@@ -8,13 +8,13 @@
     android:background="#01051a"
     android:padding="16dp">
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.65" />
+
     <ImageView
         android:id="@+id/iv_logo_symbol"
         android:layout_width="0dp"
@@ -40,49 +40,55 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_logo_symbol"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_buttons"
-    />
+        app:layout_constraintBottom_toTopOf="@+id/guideline_buttons" />
 
-    <Button
-        android:id="@+id/btn_role_admin"
+    <TextView
+        android:id="@+id/tv_admin_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Statistics Admin"
+        android:textColor="#00E676"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-light"
+        android:letterSpacing="0.08"
+        app:layout_constraintBottom_toTopOf="@+id/swipe_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/swipe_container"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:backgroundTint="#00E676"
-        android:text="MATCH STATISTICIAN"
-        android:textColor="#01051a"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-condensed"
+        android:layout_height="64dp"
+        android:background="@drawable/swipe_background"
         app:layout_constraintWidth_percent="0.85"
         app:layout_constraintTop_toBottomOf="@+id/guideline_buttons"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btn_role_fan"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="#FFFFFF"
-        android:text="@string/fan_spectator"
-        android:textColor="#01051a"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-condensed"
-        app:layout_constraintWidth_percent="0.85"
-        app:layout_constraintTop_toBottomOf="@+id/btn_role_admin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/tv_swipe_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Swipe to Enter >>"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="16sp"
+            android:alpha="0.7" />
 
-    <TextView
-        android:id="@+id/tv_main_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Choose your role to continue"
-        android:textColor="#D3D3D3"
-        android:alpha="0.8"
-        app:layout_constraintTop_toBottomOf="@+id/btn_role_fan"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <ImageView
+            android:id="@+id/iv_swipe_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/swipe_button_circle"
+            android:src="@android:drawable/ic_media_play"
+            android:padding="12dp"
+            android:contentDescription="Swipe thumb" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,46 +62,24 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
                 .circleCrop()
                 .into(holder.ivPhoto);
 
-        if (isReadOnly) {
-            // Λειτουργία Φιλάθλου: Κρύβουμε το CheckBox και ενεργοποιούμε το άμεσο κλικ
-            holder.cbStarter.setVisibility(View.GONE);
+        holder.cbStarter.setVisibility(View.VISIBLE);
+        holder.cbStarter.setOnCheckedChangeListener(null);
+        holder.cbStarter.setChecked(selectedPlayerIds.contains(player.getId()));
 
-            holder.itemView.setOnClickListener(v -> {
-                android.content.Context context = holder.itemView.getContext();
-                android.content.Intent intent = new android.content.Intent(context, PlayerDetailsActivity.class);
-
-                // Περνάμε όλα τα απαραίτητα στοιχεία του παίκτη στο Intent
-                intent.putExtra("PLAYER_ID", player.getId());
-                intent.putExtra("PLAYER_NAME", player.getName());
-                intent.putExtra("PLAYER_POSITION", player.getPosition());
-                intent.putExtra("PLAYER_PHOTO", player.getPhoto());
-                intent.putExtra("PLAYER_NUMBER", player.getNumber());
-                intent.putExtra("PLAYER_AGE", player.getAge());
-                intent.putExtra("PLAYER_TEAM_NAME", teamName);
-
-                context.startActivity(intent);
-            });
-        } else {
-            // Λειτουργία Επεξεργασίας (Ο αρχικός κώδικας της συνεργάτιδάς σου)
-            holder.cbStarter.setVisibility(View.VISIBLE);
-            holder.cbStarter.setOnCheckedChangeListener(null);
-            holder.cbStarter.setChecked(selectedPlayerIds.contains(player.getId()));
-
-            holder.itemView.setOnClickListener(v -> {
-                int id = player.getId();
-                if (selectedPlayerIds.contains(id)) {
-                    selectedPlayerIds.remove(Integer.valueOf(id));
-                } else {
-                    if (selectedPlayerIds.size() < 11) {
-                        selectedPlayerIds.add(id);
-                    }
+        holder.itemView.setOnClickListener(v -> {
+            int id = player.getId();
+            if (selectedPlayerIds.contains(id)) {
+                selectedPlayerIds.remove(Integer.valueOf(id));
+            } else {
+                if (selectedPlayerIds.size() < 11) {
+                    selectedPlayerIds.add(id);
                 }
-                notifyItemChanged(position);
-                if (listener != null) {
-                    listener.onSelectionChanged(selectedPlayerIds.size());
-                }
-            });
-        }
+            }
+            notifyItemChanged(position);
+            if (listener != null) {
+                listener.onSelectionChanged(selectedPlayerIds.size());
+            }
+        });
     }
 
     @Override

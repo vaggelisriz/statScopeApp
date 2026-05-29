@@ -78,32 +78,4 @@ public class MatchRepository {
                     }
                 });
     }
-
-    // ─── 🆕 Φέρνει τη Βαθμολογία του Πρωταθλήματος ─────────────────────────────
-    public void fetchChampionshipStandings(
-            int championshipId,
-            MutableLiveData<List<TeamStanding>> result,
-            MutableLiveData<Boolean> isLoading,
-            MutableLiveData<String> error) {
-
-        isLoading.setValue(true);
-
-        apiService.getChampionshipStandings(championshipId).enqueue(new Callback<List<TeamStanding>>() {
-            @Override
-            public void onResponse(Call<List<TeamStanding>> call, Response<List<TeamStanding>> response) {
-                isLoading.postValue(false);
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    error.postValue("Server error fetching standings: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<TeamStanding>> call, Throwable t) {
-                isLoading.postValue(false);
-                error.postValue("Network error: " + t.getMessage());
-            }
-        });
-    }
 }
