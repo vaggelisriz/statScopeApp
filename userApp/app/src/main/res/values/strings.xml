@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">StatScope</string>
+    <string name="logo_description">App Logo</string>
+    <string name="match_statistician">MATCH STATISTICIAN</string>
+    <string name="fan">FAN / SPECTATOR</string>
+    <string name="choose_your_role_to_continue">Choose your role to continue</string>
+    <string name="fan_spectator">FAN / SPECTATOR</string>
+    <string-array name="championships_title">
+        <item>CHAMPIONSHIPS</item>
+    </string-array>
+
+    <string-array name="matches_title">
+        <item>MATCHES</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
