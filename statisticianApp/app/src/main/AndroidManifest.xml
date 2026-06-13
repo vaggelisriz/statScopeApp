@@ -33,8 +33,6 @@
         <activity android:name=".LiveMatchActionsActivity" android:exported="false" />
         <activity android:name=".UpdateLineupsActivity" android:exported="false" />
 
-        <activity android:name=".StatisticsActivity"   android:exported="false" />
-
 
         <activity android:name=".LiveStatsActivity"
             android:exported="false"/>

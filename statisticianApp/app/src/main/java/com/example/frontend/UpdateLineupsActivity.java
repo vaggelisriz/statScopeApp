@@ -119,7 +119,7 @@ public class UpdateLineupsActivity extends AppCompatActivity {
 
         RetrofitClient.getApiService()
                 .getMatchLineups(matchId)
-                .enqueue(new Callback<LineupResponse>() { // Κρατήθηκε το LineupResponse
+                .enqueue(new Callback<LineupResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<LineupResponse> call, @NonNull Response<LineupResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -144,7 +144,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
                 });
     }
 
-    // 🛠️ ΔΙΟΡΘΩΘΗΚΕ: Με όλες τις αγκύλες και σωστό έλεγχο
     private void distributeExistingLineup(List<Player> players) {
         homeStarters.clear(); homeBench.clear();
         awayStarters.clear(); awayBench.clear();
@@ -215,7 +214,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
         });
     }
 
-    // 🛠️ ΔΙΟΡΘΩΘΗΚΕ: Σύγκριση με getId()
     private void mergePlayersIntoBench(List<Player> allHome, List<Player> allAway) {
         runOnUiThread(() -> {
             if (homeStarters.isEmpty() && awayStarters.isEmpty()) return;
@@ -395,7 +393,6 @@ public class UpdateLineupsActivity extends AppCompatActivity {
         List<Integer> homeIds = extractIds(homeStarters);
         List<Integer> awayIds = extractIds(awayStarters);
 
-        // Κρατήθηκε η δική σου αρχική μέθοδος αποθήκευσης με τις 4 παραμέτρους
         RetrofitClient.getApiService()
                 .updateMatchStatusAndLineups(matchId, "live", homeIds, awayIds)
                 .enqueue(new Callback<StatusResponse>() {

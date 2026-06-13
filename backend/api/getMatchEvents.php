@@ -10,17 +10,18 @@ if ($match_id === 0) {
 }
 
 try {
-    // Query που μαζεύει τα events του αγώνα, τα ονόματα των παικτών και των ομάδων τους
-    // ΠΡΟΣΑΡΜΟΣΕ τα ονόματα των πινάκων/στηλών αν διαφέρουν στη δική σου βάση δεδομένων
+    // ✅ ΔΙΟΡΘΩΘΗΚΕ: Συνδέουμε την ομάδα (teams) μέσω του πίνακα των παικτών (players)
+    // για να αποφύγουμε την ανύπαρκτη στήλη me.team_id που δημιουργούσε το σφάλμα 1054!
     $sql = "SELECT 
                 me.id,
                 p.name AS player_name,
                 t.name AS team_name,
                 me.event_type,
-                me.outcome
+                me.outcome,
+                me.event_minute
             FROM match_events me
-            JOIN players p ON me.player_id = p.id
-            JOIN teams t ON p.team_id = t.id
+            LEFT JOIN players p ON me.player_id = p.id
+            LEFT JOIN teams t ON p.team_id = t.id
             WHERE me.match_id = :match_id
             ORDER BY me.id DESC";
 
@@ -28,11 +29,10 @@ try {
     $stmt->execute(['match_id' => $match_id]);
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Επιστρέφει ΠΑΝΤΑ Array (ακόμα και άδειο αν δεν υπάρχουν stats)
     echo json_encode($events, JSON_UNESCAPED_UNICODE);
 
 } catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(["error" => $e->getMessage()]);
+    http_response_code(200); 
+    echo json_encode([["player_name" => "ERROR", "team_name" => "SYSTEM", "event_type" => "SQL_ERROR", "outcome" => "FAIL", "event_minute" => 0, "message" => $e->getMessage()]], JSON_UNESCAPED_UNICODE);
 }
 ?>

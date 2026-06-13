@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#01051a"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_dialog_team_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:text="SELECT PLAYER"
+        android:textColor="#00E676"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_dialog_team_event"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#00E676"
+        android:text="TEAM STATISTICS"
+        android:textColor="#01051a"
+        android:textStyle="bold"
+        android:letterSpacing="0.05" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_dialog_players"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#131833"
+        android:padding="8dp" />
+
+</LinearLayout>

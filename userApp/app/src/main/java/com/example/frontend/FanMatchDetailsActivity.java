@@ -40,6 +40,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private final List<Player> awayPlayersList = new ArrayList<>();
 
     // Δήλωση των TextViews για τα στατιστικά
+    private TextView tvStatHomePossession, tvStatAwayPossession;
     private TextView tvStatHomeShots, tvStatAwayShots;
     private TextView tvStatHomePasses, tvStatAwayPasses;
     private TextView tvStatHomeFouls, tvStatAwayFouls;
@@ -89,6 +90,8 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         ivAwayArrow = findViewById(R.id.iv_away_arrow);
 
         // 4. Σύνδεση όλων των Views για τα Stats (16 συνολικά FindViewById)
+        tvStatHomePossession = findViewById(R.id.tv_stat_home_possession);
+        tvStatAwayPossession = findViewById(R.id.tv_stat_away_possession);
         tvStatHomeShots = findViewById(R.id.tv_stat_home_shots);
         tvStatAwayShots = findViewById(R.id.tv_stat_away_shots);
         tvStatHomePasses = findViewById(R.id.tv_stat_home_passes);
@@ -306,9 +309,22 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                     String jsonEvents = responseEvents.body().string();
                     JSONArray jsonArray = new JSONArray(jsonEvents);
 
+                    // 1. Προσθέτουμε κανονικά όλα τα events στη λίστα
                     for (int i = 0; i < jsonArray.length(); i++) {
                         fetchedEvents.add(jsonArray.getJSONObject(i));
                     }
+
+                    // 🛠️ 2. ΤΑΞΙΝΟΜΗΣΗ: Ταξινομούμε τη λίστα ώστε το μεγαλύτερο λεπτό να πηγαίνει ΠΑΝΤΑ πρώτο!
+                    java.util.Collections.sort(fetchedEvents, new java.util.Comparator<JSONObject>() {
+                        @Override
+                        public int compare(JSONObject a, JSONObject b) {
+                            int minA = a.optInt("event_minute", 0);
+                            int minB = b.optInt("event_minute", 0);
+
+                            // Φθίνουσα σειρά (από το μεγαλύτερο λεπτό στο μικρότερο)
+                            return Integer.compare(minB, minA);
+                        }
+                    });
                 }
 
                 // ─────────────────────────────────────────────────────────────────
@@ -329,8 +345,28 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                         eventsList.clear();
                         eventsList.addAll(fetchedEvents);
                         eventLogAdapter.notifyDataSetChanged();
+                        int homePassesInt = 0;
+                        int awayPassesInt = 0;
+                        try {
+                            homePassesInt = Integer.parseInt(fHomePasses);
+                            awayPassesInt = Integer.parseInt(fAwayPasses);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+
+                        int homePossession = 50;
+                        int awayPossession = 50;
+                        int totalPasses = homePassesInt + awayPassesInt;
+
+                        if (totalPasses > 0) {
+                            homePossession = Math.round(((float) homePassesInt / totalPasses) * 100);
+                            awayPossession = 100 - homePossession;
+                        }
+
 
                         // Ενημερώνουμε τα TextViews των στατιστικών
+                        tvStatHomePossession.setText(homePossession + "%");
+                        tvStatAwayPossession.setText(awayPossession + "%");
                         tvStatHomeShots.setText(fHomeShots);
                         tvStatAwayShots.setText(fAwayShots);
                         tvStatHomePasses.setText(fHomePasses);
@@ -366,7 +402,8 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // 🌟 Διορθωμένος και πλήρης Adapter με σωστά ονόματα και Global Views
+
+    // 🌟 Διορθωμένος και πλήρης Adapter με δυναμική στοίχιση και λεπτό αγώνα
     private class EventLogAdapter extends RecyclerView.Adapter<EventLogAdapter.ViewHolder> {
         private final List<JSONObject> logs;
 
@@ -375,7 +412,6 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            // Φουσκώνουμε το item_live_event_text.xml που μου έδωσες
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_live_event, parent, false);
             return new ViewHolder(view);
         }
@@ -385,32 +421,74 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             try {
                 JSONObject statObj = logs.get(position);
 
-                // Διαβάζουμε τα δεδομένα από το getMatchEvents.php
-                String teamName = statObj.optString("team_name", "");
-                String playerName = statObj.optString("player_name", "Παίκτης");
+                // 1. Διάβασμα δεδομένων από το API με ασφάλεια (optString)
+                String teamName = statObj.optString("team_name", "UNKNOWN");
+                String playerName = statObj.optString("player_name", "TEAM");
                 String eventType = statObj.optString("event_type", "").toUpperCase().replace("_", " ");
+                String outcome = statObj.optString("outcome", "").toLowerCase();
+                int minute = statObj.optInt("event_minute", 0);
 
-                // 🎯 Φτιάχνουμε το String στη μορφή που θες: "Player (EVENT)."
-                String formattedText = playerName + " (" + eventType + ").";
-                holder.tvEventText.setText(formattedText);
-
-                // Παίρνουμε το όνομα της Home Team από το global TextView της Activity
-                String homeTeamTitle = tvDetailHome.getText().toString();
-
-                // Παίρνουμε τις παραμέτρους διάταξης του TextView (είναι FrameLayout.LayoutParams επειδή το root είναι FrameLayout!)
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) holder.tvEventText.getLayoutParams();
-
-                if (teamName.equalsIgnoreCase(homeTeamTitle)) {
-                    // 🏠 ΕΝΤΟΣ ΕΔΡΑΣ: Στοίχιση Αριστερά, Λευκό χρώμα
-                    params.gravity = android.view.Gravity.START | android.view.Gravity.CENTER_VERTICAL;
-                    holder.tvEventText.setTextColor(android.graphics.Color.WHITE);
-                } else {
-                    // 🚀 ΕΚΤΟΣ ΕΔΡΑΣ: Στοίχιση Δεξιά, Γκρι-μπλε χρώμα
-                    params.gravity = android.view.Gravity.END | android.view.Gravity.CENTER_VERTICAL;
-                    holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#8A92B2"));
+                // Αν το player_name επιστρέψει null ως String ή είναι άδειο, το κάνουμε "TEAM"
+                if (playerName == null || playerName.equalsIgnoreCase("null") || playerName.trim().isEmpty()) {
+                    playerName = "TEAM";
                 }
 
-                holder.tvEventText.setLayoutParams(params);
+                // Αν το teamName είναι null, βάζουμε μια προσωρινή τιμή για να μη σκάσει ο έλεγχος παρακάτω
+                if (teamName == null || teamName.equalsIgnoreCase("null")) {
+                    teamName = "UNKNOWN";
+                }
+
+                // 2. Εμφάνιση λεπτού
+                holder.tvEventMinute.setText(minute + "'");
+
+                // 🛠️ 3. ΕΞΥΠΝΗ ΜΟΡΦΟΠΟΙΗΣΗ ΓΙΑ ΓΚΟΛ
+                String formattedText;
+                boolean isRealGoal = outcome.equalsIgnoreCase("goal");
+
+                if (isRealGoal) {
+                    // Αν είναι γκολ, γράφουμε GOAL με κεφαλαία!
+                    formattedText = playerName + " (GOAL!).";
+                } else {
+                    // Για όλα τα υπόλοιπα στατιστικά, κρατάμε τη default μορφή
+                    formattedText = playerName + " (" + eventType + ").";
+                }
+                holder.tvEventText.setText(formattedText);
+
+                // 4. ΕΠΑΝΑΦΟΡΑ ΣΕΙΡΑΣ (Reset των Views)
+                holder.rowContainer.removeAllViews();
+                holder.rowContainer.addView(holder.tvEventMinute);
+                holder.rowContainer.addView(holder.tvEventText);
+
+                // 5. Έλεγχος ομάδας για στοίχιση και χρώματα
+                String homeTeamTitle = tvDetailHome.getText().toString();
+
+                if (teamName.equalsIgnoreCase(homeTeamTitle)) {
+                    // 🏠 HOME TEAM: Στοίχιση Αριστερά
+                    holder.tvEventText.setGravity(android.view.Gravity.START);
+
+                    if (isRealGoal) {
+                        // Αν είναι γκολ της Home Team, το βάφουμε με το φωτεινό πράσινο της εφαρμογής σου!
+                        holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#00E676"));
+                    } else {
+                        holder.tvEventText.setTextColor(android.graphics.Color.WHITE);
+                    }
+                    holder.tvEventMinute.setPadding(0, 0, 8, 0);
+
+                } else {
+                    // 🚀 AWAY TEAM: Στοίχιση Δεξιά
+                    holder.rowContainer.removeView(holder.tvEventMinute);
+                    holder.rowContainer.addView(holder.tvEventMinute); // Το λεπτό πάει δεξιά
+
+                    holder.tvEventText.setGravity(android.view.Gravity.END);
+
+                    if (isRealGoal) {
+                        // Αν είναι γκολ της Away Team, το βάφουμε επίσης πράσινο για να βγάζει μάτι!
+                        holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#00E676"));
+                    } else {
+                        holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#8A92B2"));
+                    }
+                    holder.tvEventMinute.setPadding(8, 0, 0, 0);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -421,16 +499,15 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         public int getItemCount() { return logs.size(); }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            android.widget.FrameLayout parentLayout; // 🆕 Αλλαγή σε FrameLayout
+            LinearLayout rowContainer; // 🆕 Σύνδεση με το οριζόντιο LinearLayout
             TextView tvEventText;
+            TextView tvEventMinute; // 🆕 Σύνδεση με το TextView του λεπτού
 
             ViewHolder(View v) {
                 super(v);
-                // Το 'v' είναι το ίδιο το FrameLayout από το XML σου
-                parentLayout = (android.widget.FrameLayout) v;
-
-                // Σύνδεση με το ID του TextView
+                rowContainer = v.findViewById(R.id.layout_event_row_container);
                 tvEventText = v.findViewById(R.id.tv_live_event_text);
+                tvEventMinute = v.findViewById(R.id.tv_live_event_minute);
             }
         }
     }

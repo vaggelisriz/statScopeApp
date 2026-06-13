@@ -137,15 +137,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#0F1633"
-                android:padding="16dp"
+                android:padding="8dp"
                 android:layout_marginBottom="24dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_match_events"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:scrollbars="vertical"
-                    android:nestedScrollingEnabled="true" />
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
             </LinearLayout>
 
             <TextView
@@ -252,6 +251,41 @@
                 android:orientation="vertical"
                 android:background="#0F1633"
                 android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+                    <TextView
+                        android:id="@+id/tv_stat_home_possession"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="50%"
+                        android:textColor="#00E676"
+                        android:textSize="14sp"
+                        android:gravity="start"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Ball Possession"
+                        android:textColor="#8A92B2"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+                    <TextView
+                        android:id="@+id/tv_stat_away_possession"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="50%"
+                        android:textColor="#00E676"
+                        android:textSize="14sp"
+                        android:gravity="end"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

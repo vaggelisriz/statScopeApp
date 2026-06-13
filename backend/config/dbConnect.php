@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db   = 'statscopedb';
+$db   = 'statscopedatabase';
 $user = 'root';
 $pass = ''; 
 
