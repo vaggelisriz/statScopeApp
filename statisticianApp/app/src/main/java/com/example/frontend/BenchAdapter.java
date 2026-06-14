@@ -8,14 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-/**
- * Adapter για τη λίστα του πάγκου μέσα στο BottomSheetDialog.
- * Κάνοντας tap σε έναν παίκτη τον επιλέγεις για αλλαγή.
- *
- * Layout απαιτήσεις: item_bench_player.xml με:
- *   - tvBenchName     (TextView)
- *   - tvBenchPosition (TextView)
- */
 public class BenchAdapter extends RecyclerView.Adapter<BenchAdapter.ViewHolder> {
 
     public interface OnPlayerSelectedListener {

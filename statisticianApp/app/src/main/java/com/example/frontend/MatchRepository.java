@@ -7,10 +7,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Repository: το μοναδικό σημείο επικοινωνίας με το API.
- * Το ViewModel το κρατά και το UI δεν ξέρει ότι υπάρχει.
- */
+
 public class MatchRepository {
 
     private final ApiService apiService;
@@ -19,7 +16,7 @@ public class MatchRepository {
         apiService = RetrofitClient.getClient().create(ApiService.class); //
     }
 
-    // ─── Φέρνει μόνο τα live ματς ───────────────────────────────────────────
+    // Φέρνει μόνο τα live ματς
     public void fetchLiveMatches(
             MutableLiveData<List<Match>> result,
             MutableLiveData<Boolean> isLoading,
@@ -52,7 +49,7 @@ public class MatchRepository {
         });
     }
 
-    // ─── Ενημερώνει το σκορ στη βάση ────────────────────────────────────────
+    // Ενημερώνει το σκορ στη βάση
     public void updateScore(
             int matchId,
             int homeScore,

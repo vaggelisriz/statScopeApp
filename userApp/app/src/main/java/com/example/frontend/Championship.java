@@ -9,7 +9,6 @@ public class Championship {
         this.name = name;
     }
 
-    // Το Spinner χρησιμοποιεί την toString() για να δείξει το κείμενο στην οθόνη!
     @Override
     public String toString() {
         return name;

@@ -10,7 +10,6 @@ public class ChampionshipPagerAdapter extends FragmentStateAdapter {
 
     private final int championshipId; //
 
-    // Ζητάμε το ID του πρωταθλήματος κατά τη δημιουργία του Adapter
     public ChampionshipPagerAdapter(@NonNull FragmentActivity fragmentActivity, int championshipId) {
         super(fragmentActivity); //
         this.championshipId = championshipId; //
@@ -21,11 +20,9 @@ public class ChampionshipPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                // ✅ ΔΙΟΡΘΩΘΗΚΕ: Περνάμε το ID στο StandingsFragment χρησιμοποιώντας τη newInstance
                 return StandingsFragment.newInstance(championshipId);
 
             case 1:
-                // ΔΙΟΡΘΩΣΗ: Περνάμε το ID και στο TeamsFragment μέσω Bundle
                 TeamsFragment teamsFragment = new TeamsFragment(); //
                 Bundle args = new Bundle(); //
                 args.putInt("CHAMPIONSHIP_ID", championshipId); //
@@ -33,10 +30,8 @@ public class ChampionshipPagerAdapter extends FragmentStateAdapter {
                 return teamsFragment; //
 
             case 2:
-                // Περνάμε το ID στο Fragment των αγώνων (έτοιμο από τη συνάδελφο)
                 return MatchesFragment.newInstance(championshipId); //
             default:
-                // ✅ ΔΙΟΡΘΩΘΗΚΕ και εδώ
                 return StandingsFragment.newInstance(championshipId);
         }
     }

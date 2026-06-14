@@ -21,7 +21,6 @@ public class PlayerSubAdapter extends RecyclerView.Adapter<PlayerSubAdapter.Play
         void onPlayerClick(Player player);
     }
 
-    // Constructor
     public PlayerSubAdapter(List<Player> playerList, boolean isBench, OnPlayerClickListener listener) {
         this.playerList = playerList;
         this.isBench = isBench;
@@ -49,7 +48,6 @@ public class PlayerSubAdapter extends RecyclerView.Adapter<PlayerSubAdapter.Play
         holder.tvPosition.setText(player.getPosition());
         holder.tvNumber.setText(String.valueOf(player.getNumber()));
 
-        // SOS ΔΙΟΡΘΩΣΗ: Χρήση του getPhoto() που αντιστοιχεί στο μοντέλο Player
         Glide.with(holder.itemView.getContext())
                 .load(player.getPhoto())
                 .placeholder(android.R.drawable.ic_menu_gallery)

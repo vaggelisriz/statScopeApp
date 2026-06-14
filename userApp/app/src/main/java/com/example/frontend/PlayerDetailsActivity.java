@@ -75,7 +75,7 @@ public class PlayerDetailsActivity extends AppCompatActivity {
                     .into(ivPlayerPhoto);
 
             if (playerId != -1) {
-                // Φέρνουμε την ηλικία (όπως το είχες)
+                // Φέρνουμε την ηλικία
                 fetchPlayerAgeFromServer(playerId);
                 // Φέρνουμε και τα στατιστικά από το match_events
                 fetchPlayerStatsFromServer(playerId);
@@ -114,11 +114,9 @@ public class PlayerDetailsActivity extends AppCompatActivity {
         }).start();
     }
 
-    // Η ΝΕΑ ΜΕΘΟΔΟΣ ΓΙΑ ΤΑ ΣΤΑΤΙΣΤΙΚΑ (MATCH_EVENTS)
     private void fetchPlayerStatsFromServer(int playerId) {
         new Thread(() -> {
             try {
-                // Χτυπάμε το νέο endpoint
                 String url = Config.BASE_URL+"/getPlayerStats.php?player_id=" + playerId;
 
                 OkHttpClient client = new OkHttpClient();

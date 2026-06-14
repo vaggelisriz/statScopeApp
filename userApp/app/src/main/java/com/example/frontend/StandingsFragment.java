@@ -33,7 +33,7 @@ public class StandingsFragment extends Fragment {
         // Υποχρεωτικός άδειος constructor
     }
 
-    // Static μέθοδος (Factory) για τη σωστή δημιουργία του Fragment με πάσαρισμα του ID
+    // Static μέθοδος για τη δημιουργία του Fragment με πάσαρισμα του ID
     public static StandingsFragment newInstance(int championshipId) {
         StandingsFragment fragment = new StandingsFragment();
         Bundle args = new Bundle();
@@ -54,13 +54,12 @@ public class StandingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Φουσκώνουμε το διορθωμένο layout με το HorizontalScrollView
         View view = inflater.inflate(R.layout.fragment_standings, container, false);
 
         rvStandings = view.findViewById(R.id.rv_frag_standings);
         progressBar = view.findViewById(R.id.pb_frag_standings_loading);
 
-        // Setup του RecyclerView με τον StandingsAdapter που φτιάξαμε
+        // Setup του RecyclerView με τον StandingsAdapter
         rvStandings.setLayoutManager(new LinearLayoutManager(getContext()));
         standingsAdapter = new StandingsAdapter(standingsList);
         rvStandings.setAdapter(standingsAdapter);
@@ -75,7 +74,7 @@ public class StandingsFragment extends Fragment {
         return view;
     }
 
-    // ⚡ ΚΛΗΣΗ OKHTTP ΓΙΑ ΤΗ ΛΗΨΗ ΤΗΣ ΒΑΘΜΟΛΟΓΙΑΣ ΑΠΟ ΤΟ BACKEND
+    // ΚΛΗΣΗ OKHTTP ΓΙΑ ΤΗ ΛΗΨΗ ΤΗΣ ΒΑΘΜΟΛΟΓΙΑΣ ΑΠΟ ΤΟ BACKEND
     private void fetchStandingsFromBackend(int id) {
         if (getActivity() == null) return;
 

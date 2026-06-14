@@ -28,7 +28,7 @@ public class PlayerHistoryAdapter extends RecyclerView.Adapter<PlayerHistoryAdap
         PlayerMatchHistory item = historyList.get(position);
 
         holder.text1.setText(item.getMatchTitle());
-        holder.text1.setTextColor(0xFFFFFFFF); // Λευκό κείμενο για το dark mode σου
+        holder.text1.setTextColor(0xFFFFFFFF);
 
         // Χτίζουμε το κείμενο των στατιστικών για αυτό το ματς
         StringBuilder stats = new StringBuilder();
@@ -40,7 +40,7 @@ public class PlayerHistoryAdapter extends RecyclerView.Adapter<PlayerHistoryAdap
         if (stats.length() == 0) stats.append("⏱️ Appeared in match");
 
         holder.text2.setText(stats.toString());
-        holder.text2.setTextColor(0xFFAAAAAA); // Γκρίζο για τα στατιστικά
+        holder.text2.setTextColor(0xFFAAAAAA);
     }
 
     @Override

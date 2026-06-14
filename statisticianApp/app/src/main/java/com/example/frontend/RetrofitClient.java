@@ -8,8 +8,6 @@ public class RetrofitClient {
 
     public static Retrofit getClient() {
         if (retrofit == null) {
-            // ✅ ΔΙΟΡΘΩΣΗ: Καλούμε το Config.BASE_URL ΔΥΝΑΜΙΚΑ μέσα στη μέθοδο
-            // ώστε να είμαστε σίγουροι ότι το String έχει σχηματιστεί σωστά.
             String targetUrl = Config.BASE_URL;
 
             retrofit = new Retrofit.Builder()

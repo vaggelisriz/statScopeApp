@@ -82,7 +82,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
                 context.startActivity(intent);
             });
         } else {
-            // Λειτουργία Επεξεργασίας (Ο αρχικός κώδικας της συνεργάτιδάς σου)
+            // Λειτουργία Επεξεργασίας
             holder.cbStarter.setVisibility(View.VISIBLE);
             holder.cbStarter.setOnCheckedChangeListener(null);
             holder.cbStarter.setChecked(selectedPlayerIds.contains(player.getId()));

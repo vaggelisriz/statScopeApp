@@ -3,8 +3,6 @@ package com.example.frontend;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-// Αντιστοιχεί στο JSON: { "status": "success", "players": [...] }
-// που επιστρέφει το getMatchLineups.php
 public class LineupResponse {
 
     @SerializedName("status")

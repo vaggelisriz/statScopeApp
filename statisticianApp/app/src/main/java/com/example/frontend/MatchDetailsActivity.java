@@ -86,7 +86,6 @@ public class MatchDetailsActivity extends AppCompatActivity {
                         else if (p.getTeamId() == awayTeamId) awayPlayers.add(p);
                     }
 
-                    // ΔΙΟΡΘΩΣΗ: Χρησιμοποιούμε τον constructor που δέχεται μόνο τη λίστα
                     rvHome.setAdapter(new PlayerAdapter(homePlayers));
                     rvAway.setAdapter(new PlayerAdapter(awayPlayers));
                 } else {

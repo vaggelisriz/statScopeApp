@@ -76,18 +76,12 @@ public class TeamsFragment extends Fragment {
             try {
                 String url = Config.BASE_URL+"/getTeams.php?championship_id=" + championshipId;
 
-                // ΔΙΚΟ ΜΑΣ ΧΑΡΑΚΤΗΡΙΣΤΙΚΟ LOG
-                System.out.println("=== ΜΥΣΤΙΚΟ LOG === ΧΤΥΠΑΩ ΤΟ URL: " + url);
-
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
 
                 if (response.isSuccessful() && response.body() != null) {
                     String jsonResponse = response.body().string();
-
-                    // ΔΙΚΟ ΜΑΣ ΧΑΡΑΚΤΗΡΙΣΤΙΚΟ LOG
-                    System.out.println("=== ΜΥΣΤΙΚΟ LOG === ΑΠΑΝΤΗΣΗ ΑΠΟ SERVER: " + jsonResponse);
 
                     JSONArray jsonArray = new JSONArray(jsonResponse);
                     List<Team> tempTeams = new ArrayList<>();
@@ -111,7 +105,6 @@ public class TeamsFragment extends Fragment {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("=== ΜΥΣΤΙΚΟ LOG === ΣΦΑΛΜΑ: " + e.getMessage());
             }
         }).start();
     }

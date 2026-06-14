@@ -40,12 +40,9 @@ public class ChampionshipActivity extends AppCompatActivity {
             tvDashboardTitle.setText(championshipName.toUpperCase());
         }
 
-        // ====================================================================
         // ΣΥΝΔΕΣΗ TAB LAYOUT & VIEW PAGER
-        // ====================================================================
 
         // 1. Ορίζουμε τον adapter στο ViewPager
-        // Βρες αυτή τη γραμμή μέσα στο onCreate σου και άλλαξέ τη σε:
         ChampionshipPagerAdapter pagerAdapter = new ChampionshipPagerAdapter(this, championshipId);
         viewPager.setAdapter(pagerAdapter);
 

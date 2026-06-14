@@ -50,10 +50,10 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     private TextView tvStatHomeCorners, tvStatAwayCorners;
     private TextView tvStatHomeMistakes, tvStatAwayMistakes;
 
-    // 🌟 Διορθωμένο: Μετατροπή των βασικών TextViews της κορυφής σε καθολικές μεταβλητές (Global)
+    // Μετατροπή των βασικών TextViews της κορυφής σε καθολικές μεταβλητές
     private TextView tvDetailHome, tvDetailAway, tvScore;
 
-    // 🆕 Μεταβλητές για το Live Feed των Συμβάντων (Διορθωμένο σε List<JSONObject>)
+    // Μεταβλητές για το Live Feed των Συμβάντων
     private RecyclerView rvMatchEvents;
     private final List<JSONObject> eventsList = new ArrayList<>();
     private EventLogAdapter eventLogAdapter;
@@ -67,7 +67,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fanmatchdetails);
 
-        // 1. Σύνδεση των βασικών Views (Διορθωμένο: Χρήση των global μεταβλητών)
+        // 1. Σύνδεση των βασικών Views
         ImageButton btnBack = findViewById(R.id.btn_back_details);
         tvDetailHome = findViewById(R.id.tv_detail_home);
         tvDetailAway = findViewById(R.id.tv_detail_away);
@@ -89,7 +89,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         ivHomeArrow = findViewById(R.id.iv_home_arrow);
         ivAwayArrow = findViewById(R.id.iv_away_arrow);
 
-        // 4. Σύνδεση όλων των Views για τα Stats (16 συνολικά FindViewById)
+        // 4. Σύνδεση όλων των Views για τα Stats
         tvStatHomePossession = findViewById(R.id.tv_stat_home_possession);
         tvStatAwayPossession = findViewById(R.id.tv_stat_away_possession);
         tvStatHomeShots = findViewById(R.id.tv_stat_home_shots);
@@ -263,9 +263,8 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
             try {
                 OkHttpClient client = new OkHttpClient();
 
-                // ─────────────────────────────────────────────────────────────────
-                // 🌟 CALL 1: Τραβάμε τα 16 αριθμητικά στατιστικά (getMatchStats.php)
-                // ─────────────────────────────────────────────────────────────────
+                // Τραβάμε τα 16 αριθμητικά στατιστικά (getMatchStats.php)
+
                 String urlStats = Config.BASE_URL + "/getMatchStats.php?match_id=" + matchId;
                 Request requestStats = new Request.Builder().url(urlStats).build();
                 Response responseStats = client.newCall(requestStats).execute();
@@ -297,9 +296,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                     awayMistakes = jsonObject.getString("away_mistakes");
                 }
 
-                // ─────────────────────────────────────────────────────────────────
-                // 🌟 CALL 2: Τραβάμε τις live ενέργειες από το δικό σου getMatchEvents.php
-                // ─────────────────────────────────────────────────────────────────
+                // Τραβάμε τις live ενέργειες από το δικό σου getMatchEvents.php
                 String urlEvents = Config.BASE_URL + "/getMatchEvents.php?match_id=" + matchId;
                 Request requestEvents = new Request.Builder().url(urlEvents).build();
                 Response responseEvents = client.newCall(requestEvents).execute();
@@ -314,7 +311,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                         fetchedEvents.add(jsonArray.getJSONObject(i));
                     }
 
-                    // 🛠️ 2. ΤΑΞΙΝΟΜΗΣΗ: Ταξινομούμε τη λίστα ώστε το μεγαλύτερο λεπτό να πηγαίνει ΠΑΝΤΑ πρώτο!
+                    // Ταξινομούμε τη λίστα ώστε το μεγαλύτερο λεπτό να πηγαίνει πρώτο!
                     java.util.Collections.sort(fetchedEvents, new java.util.Comparator<JSONObject>() {
                         @Override
                         public int compare(JSONObject a, JSONObject b) {
@@ -328,7 +325,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                 }
 
                 // ─────────────────────────────────────────────────────────────────
-                // 🌟 CALL 3: Ανανέωση του UI στο Main Thread
+                // Ανανέωση του UI στο Main Thread
                 // ─────────────────────────────────────────────────────────────────
                 final String fHomeShots = homeShots; final String fAwayShots = awayShots;
                 final String fHomePasses = homePasses; final String fAwayPasses = awayPasses;
@@ -341,7 +338,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (!isFinishing() && !isDestroyed()) {
-                        // Γεμίζουμε το Live Feed (που πλέον δέχεται JSONObject)
+                        // Γεμίζουμε το Live Feed
                         eventsList.clear();
                         eventsList.addAll(fetchedEvents);
                         eventLogAdapter.notifyDataSetChanged();
@@ -403,7 +400,6 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
     }
 
 
-    // 🌟 Διορθωμένος και πλήρης Adapter με δυναμική στοίχιση και λεπτό αγώνα
     private class EventLogAdapter extends RecyclerView.Adapter<EventLogAdapter.ViewHolder> {
         private final List<JSONObject> logs;
 
@@ -441,7 +437,7 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                 // 2. Εμφάνιση λεπτού
                 holder.tvEventMinute.setText(minute + "'");
 
-                // 🛠️ 3. ΕΞΥΠΝΗ ΜΟΡΦΟΠΟΙΗΣΗ ΓΙΑ ΓΚΟΛ
+                // ΜΟΡΦΟΠΟΙΗΣΗ ΓΙΑ ΓΚΟΛ
                 String formattedText;
                 boolean isRealGoal = outcome.equalsIgnoreCase("goal");
 
@@ -463,11 +459,10 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                 String homeTeamTitle = tvDetailHome.getText().toString();
 
                 if (teamName.equalsIgnoreCase(homeTeamTitle)) {
-                    // 🏠 HOME TEAM: Στοίχιση Αριστερά
+                    // HOME TEAM: Στοίχιση Αριστερά
                     holder.tvEventText.setGravity(android.view.Gravity.START);
 
                     if (isRealGoal) {
-                        // Αν είναι γκολ της Home Team, το βάφουμε με το φωτεινό πράσινο της εφαρμογής σου!
                         holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#00E676"));
                     } else {
                         holder.tvEventText.setTextColor(android.graphics.Color.WHITE);
@@ -475,14 +470,13 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
                     holder.tvEventMinute.setPadding(0, 0, 8, 0);
 
                 } else {
-                    // 🚀 AWAY TEAM: Στοίχιση Δεξιά
+                    // AWAY TEAM: Στοίχιση Δεξιά
                     holder.rowContainer.removeView(holder.tvEventMinute);
-                    holder.rowContainer.addView(holder.tvEventMinute); // Το λεπτό πάει δεξιά
+                    holder.rowContainer.addView(holder.tvEventMinute);
 
                     holder.tvEventText.setGravity(android.view.Gravity.END);
 
                     if (isRealGoal) {
-                        // Αν είναι γκολ της Away Team, το βάφουμε επίσης πράσινο για να βγάζει μάτι!
                         holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#00E676"));
                     } else {
                         holder.tvEventText.setTextColor(android.graphics.Color.parseColor("#8A92B2"));
@@ -499,9 +493,9 @@ public class FanMatchDetailsActivity extends AppCompatActivity {
         public int getItemCount() { return logs.size(); }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            LinearLayout rowContainer; // 🆕 Σύνδεση με το οριζόντιο LinearLayout
+            LinearLayout rowContainer;
             TextView tvEventText;
-            TextView tvEventMinute; // 🆕 Σύνδεση με το TextView του λεπτού
+            TextView tvEventMinute;
 
             ViewHolder(View v) {
                 super(v);

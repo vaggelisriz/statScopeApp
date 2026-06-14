@@ -50,12 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 case MotionEvent.ACTION_MOVE:
                     float newX = event.getRawX() + dX;
 
-                    // Ορια: Μην επιτρέπεις στο κουμπί να βγει αριστερά από το Container
                     if (newX < 4) { // 4 είναι το layout_marginStart που βάλαμε στο XML
                         newX = 4;
                     }
 
-                    // Όρια: Μην επιτρέπεις να βγει δεξιά από το Container
                     float maxRight = swipeContainer.getWidth() - view.getWidth() - 4;
                     if (newX > maxRight) {
                         newX = maxRight;

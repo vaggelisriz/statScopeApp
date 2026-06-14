@@ -20,7 +20,7 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MatchAdapter adapter;
     private ImageButton btnBack;
-    // ✅ ΔΙΟΡΘΩΣΗ: η λίστα είναι final ώστε να τη μοιράζεται ο adapter
+    // η λίστα είναι final ώστε να τη μοιράζεται ο adapter
     private final List<Match> scheduledMatches = new ArrayList<>();
 
     @Override
@@ -33,8 +33,7 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // ✅ ΔΙΟΡΘΩΣΗ: ο adapter δημιουργείται ΜΙΑ ΦΟΡΑ εδώ με click listener
-        //    (ήταν: δημιουργούνταν νέος adapter σε κάθε API response → flicker + memory leaks)
+        // ο adapter δημιουργείται ΜΙΑ ΦΟΡΑ εδώ με click listener
         adapter = new MatchAdapter(this, scheduledMatches, match -> {
             Intent intent = new Intent(ScheduledMatchesActivity.this, MatchLiveControlActivity.class);
             intent.putExtra("selected_match", match);
@@ -63,8 +62,6 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
                             scheduledMatches.add(m);
                         }
                     }
-
-                    // ✅ ΔΙΟΡΘΩΣΗ: ενημερώνουμε τον ήδη υπάρχοντα adapter
                     adapter.notifyDataSetChanged();
                 }
             }

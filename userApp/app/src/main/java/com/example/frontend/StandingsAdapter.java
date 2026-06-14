@@ -54,7 +54,7 @@ public class StandingsAdapter extends RecyclerView.Adapter<StandingsAdapter.View
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .into(holder.ivTeamLogo);
 
-        // ⚡ ΚΛΙΚ ΓΙΑ ΜΕΤΑΒΑΣΗ ΣΤΗΝ TEAM ROSTER ACTIVITY
+        // ΚΛΙΚ ΓΙΑ ΜΕΤΑΒΑΣΗ ΣΤΗΝ TEAM ROSTER ACTIVITY
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
             Intent intent = new Intent(context, TeamRosterActivity.class);

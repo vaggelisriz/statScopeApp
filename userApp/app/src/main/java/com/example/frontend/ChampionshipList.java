@@ -25,7 +25,6 @@ public class ChampionshipList{
         return temp;
     }
 
-    // Προσθήκη στο τέλος της ChampionshipList.java για να παίρνουμε το ID
     public int getChampionshipId(int position) {
         return chlist.get(position).getId();
     }

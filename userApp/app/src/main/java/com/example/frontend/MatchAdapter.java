@@ -23,16 +23,11 @@ public class MatchAdapter
     private final Context context;
     private final OnItemClickListener listener;
 
-    // ─────────────────────────────────────────────
     // CLICK LISTENER
-    // ─────────────────────────────────────────────
     public interface OnItemClickListener {
         void onItemClick(Match match);
     }
 
-    // ─────────────────────────────────────────────
-    // CONSTRUCTOR
-    // ─────────────────────────────────────────────
     public MatchAdapter(
             Context context,
             List<Match> matches,
@@ -49,9 +44,7 @@ public class MatchAdapter
         this.listener = listener;
     }
 
-    // ─────────────────────────────────────────────
     // UPDATE LIST
-    // ─────────────────────────────────────────────
     public void updateList(List<Match> newMatches) {
 
         this.matches.clear();
@@ -63,9 +56,7 @@ public class MatchAdapter
         notifyDataSetChanged();
     }
 
-    // ─────────────────────────────────────────────
     // CREATE VIEW HOLDER
-    // ─────────────────────────────────────────────
     @NonNull
     @Override
     public MatchViewHolder onCreateViewHolder(
@@ -84,9 +75,7 @@ public class MatchAdapter
         return new MatchViewHolder(view);
     }
 
-    // ─────────────────────────────────────────────
     // BIND DATA
-    // ─────────────────────────────────────────────
     @Override
     public void onBindViewHolder(
             @NonNull MatchViewHolder holder,
@@ -140,9 +129,7 @@ public class MatchAdapter
         );
     }
 
-    // ─────────────────────────────────────────────
     // ITEM COUNT
-    // ─────────────────────────────────────────────
     @Override
     public int getItemCount() {
 
@@ -151,9 +138,7 @@ public class MatchAdapter
                 : 0;
     }
 
-    // ─────────────────────────────────────────────
     // VIEW HOLDER
-    // ─────────────────────────────────────────────
     static class MatchViewHolder
             extends RecyclerView.ViewHolder {
 

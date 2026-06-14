@@ -34,7 +34,7 @@ public class FanActivity extends AppCompatActivity {
     private TextView tvChampionshipsHeader;
     private ImageView ivChampionshipArrow;
 
-    // ΔΙΟΡΘΩΘΗΚΕ: Στοιχεία για το Dropdown των Matches (Χρήση RecyclerView αντί για LinearLayout)
+    // Στοιχεία για το Dropdown των Matches
     private LinearLayout layoutMatchesHeader;
     private RecyclerView rvLiveMatches;
     private ImageView ivMatchesArrow;
@@ -60,17 +60,15 @@ public class FanActivity extends AppCompatActivity {
         tvChampionshipsHeader = findViewById(R.id.tv_championships_header);
         ivChampionshipArrow = findViewById(R.id.iv_championship_arrow);
 
-        // 2. ΔΙΟΡΘΩΘΗΚΕ: Σύνδεση του RecyclerView για τα Matches
+        // 2. Σύνδεση του RecyclerView για τα Matches
         layoutMatchesHeader = findViewById(R.id.layout_matches_header);
         rvLiveMatches = findViewById(R.id.rv_live_matches);
         ivMatchesArrow = findViewById(R.id.iv_matches_arrow);
 
-        // ΑΠΑΡΑΙΤΗΤΟ: Ορίζουμε τη διάταξη του RecyclerView σε κάθετη (LinearLayoutManager)
+        // Ορίζουμε τη διάταξη του RecyclerView σε κάθετη
         rvLiveMatches.setLayoutManager(new LinearLayoutManager(this));
 
-        // ====================================================================
         // ΛΟΓΙΚΗ ACCORDION ΓΙΑ ΤΑ CHAMPIONSHIPS
-        // ====================================================================
         layoutChampionshipHeader.setOnClickListener(v -> {
             if (layoutChampionshipOptionsContainer.getVisibility() == View.GONE) {
                 layoutChampionshipOptionsContainer.setVisibility(View.VISIBLE);
@@ -82,9 +80,7 @@ public class FanActivity extends AppCompatActivity {
             }
         });
 
-        // ====================================================================
-        // ΔΙΟΡΘΩΘΗΚΕ: ΛΟΓΙΚΗ ACCORDION ΓΙΑ ΤΑ MATCHES (Διαχείριση visibility του RecyclerView)
-        // ====================================================================
+        // ΔΙΟΡΘΩΘΗΚΕ: ΛΟΓΙΚΗ ACCORDION ΓΙΑ ΤΑ MATCHES
         layoutMatchesHeader.setOnClickListener(v -> {
             if (rvLiveMatches.getVisibility() == View.GONE) {
                 rvLiveMatches.setVisibility(View.VISIBLE);
@@ -99,7 +95,7 @@ public class FanActivity extends AppCompatActivity {
         loadChampionships();
     }
 
-    // ΔΙΟΡΘΩΘΗΚΕ: Φόρτωση των LIVE αγώνων και σύνδεση με τον LiveMatchAdapter
+    // Φόρτωση των LIVE αγώνων και σύνδεση με τον LiveMatchAdapter
     private void fetchLiveMatchesFromBackend() {
         new Thread(() -> {
             try {
@@ -114,7 +110,6 @@ public class FanActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         if (!isFinishing() && !isDestroyed()) {
-                            // ΜΑΓΙΚΗ ΓΡΑΜΜΗ: Αντί να φτιάχνουμε TextViews, δίνουμε τη λίστα στον Adapter
                             LiveMatchAdapter adapter = new LiveMatchAdapter(this, jsonArray);
                             rvLiveMatches.setAdapter(adapter);
                         }
@@ -188,7 +183,7 @@ public class FanActivity extends AppCompatActivity {
             ivChampionshipArrow.setImageResource(android.R.drawable.arrow_down_float);
         }
 
-        // ΔΙΟΡΘΩΘΗΚΕ: Τα Matches θέλουμε να μένουν ανοιχτά (RecyclerView)
+        // Τα Matches θέλουμε να μένουν ανοιχτά
         if (rvLiveMatches != null) {
             rvLiveMatches.setVisibility(View.VISIBLE);
         }

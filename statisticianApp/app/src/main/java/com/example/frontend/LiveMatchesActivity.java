@@ -44,9 +44,6 @@ public class LiveMatchesActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.rv_live_matches);
         ImageButton btnBack = findViewById(R.id.btn_back_live);
 
-        // Αν έχεις ProgressBar στο XML
-        // progressBar = findViewById(R.id.progress_bar);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Adapter
@@ -110,7 +107,7 @@ public class LiveMatchesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        // Σταματά το auto refresh όταν φύγεις από τη σελίδα
+        // Σταματά το auto refresh όταν φύγουμε από τη σελίδα
         handler.removeCallbacks(refreshRunnable);
     }
 }

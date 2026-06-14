@@ -34,7 +34,6 @@ public class OkHttpHandler {
                 int id = jsonObject.getInt("id");
                 String name = jsonObject.getString("name");
 
-                // 4. Τώρα η Java ξέρει τι είναι το id και το name και τα δέχεται κανονικά!
                 championshipList.add(new Championship(id, name));
             }
         } catch (JSONException e) {
@@ -53,13 +52,8 @@ public class OkHttpHandler {
         Response response = client.newCall(request).execute();
         String data = response.body().string();
 
-        // ΔΙΑΓΝΩΣΤΙΚΟ Α: Δες τι ακριβώς επιστρέφει το get_matches.php αρχείο σου!
-        System.out.println("=== ΔΙΑΓΝΩΣΤΙΚΟ Α === RAW DATA ΑΠΟ PHP: " + data);
-
         try {
             JSONArray jsonArray = new JSONArray(data);
-            System.out.println("=== ΔΙΑΓΝΩΣΤΙΚΟ Β === Το JSONArray έχει μέγεθος: " + jsonArray.length());
-
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
@@ -82,7 +76,6 @@ public class OkHttpHandler {
                         homeTeamId, awayTeamId, status, homeLogo, awayLogo, championshipName));
             }
         } catch (Exception e) {
-            System.out.println("=== ΔΙΑΓΝΩΣΤΙΚΟ JSON ERROR === Πρόβλημα στο parsing: " + e.getMessage());
             e.printStackTrace();
         }
         return matchList;

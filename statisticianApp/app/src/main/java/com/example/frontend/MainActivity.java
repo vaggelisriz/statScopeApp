@@ -27,17 +27,12 @@ public class MainActivity extends AppCompatActivity {
         startInitialBounceAnimation();
     }
 
-    /**
-     * Αρχικοποίηση των νέων UI components
-     */
     private void initViewComponents() {
         swipeContainer = findViewById(R.id.swipe_container);
         swipeButton = findViewById(R.id.iv_swipe_button);
     }
 
-    /**
-     * Λογική για το σύρσιμο (Swipe) και το Intent
-     */
+
     @SuppressLint("ClickableViewAccessibility")
     private void setupSwipeLogic() {
         swipeButton.setOnTouchListener((view, event) -> {

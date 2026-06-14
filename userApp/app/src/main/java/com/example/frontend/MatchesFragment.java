@@ -18,14 +18,13 @@ public class MatchesFragment extends Fragment {
 
     private int championshipId;
     private RecyclerView recyclerView;
-    private MatchAdapter adapter; // Η δική σου μεταβλητή για τον adapter
-    private final List<Match> championshipMatches = new ArrayList<>(); // Η δική σου λίστα
-
+    private MatchAdapter adapter;
+    private final List<Match> championshipMatches = new ArrayList<>();
     public MatchesFragment() {
         // Απαιτούμενος άδειος δημόσιος κατασκευαστής
     }
 
-    // Το εργοστασιακό newInstance που καλείται από τον PagerAdapter σου
+    // Το εργοστασιακό newInstance που καλείται από τον PagerAdapter
     public static MatchesFragment newInstance(int championshipId) {
         MatchesFragment fragment = new MatchesFragment();
         Bundle args = new Bundle();
@@ -45,7 +44,7 @@ public class MatchesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Φουσκώνουμε το έτοιμο XML σου fragment_matches.xml
+        // Φουσκώνουμε το έτοιμο XML fragment_matches.xml
         return inflater.inflate(R.layout.fragment_matches, container, false);
     }
 
@@ -53,11 +52,9 @@ public class MatchesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Αρχικοποίηση του RecyclerView με βάση το ID rv_matches του XML σου
         recyclerView = view.findViewById(R.id.rv_matches);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // ΔΙΟΡΘΩΣΗ: Αρχικοποίηση του δικού σου 'adapter' με τη δική σου λίστα 'championshipMatches'
         adapter = new MatchAdapter(getContext(), championshipMatches, match -> {
 
             // Όταν γίνει κλικ σε ένα match, ανοίγει η MatchDetailsActivity
@@ -77,10 +74,8 @@ public class MatchesFragment extends Fragment {
             startActivity(intent);
         });
 
-        // ΔΙΟΡΘΩΣΗ: Σύνδεση του σωστού 'adapter' με το RecyclerView
         recyclerView.setAdapter(adapter);
 
-        // Εκκίνηση της λήψης των αγώνων από τη βάση
         fetchChampionshipMatches();
     }
 
@@ -98,7 +93,6 @@ public class MatchesFragment extends Fragment {
                     championshipMatches.add(m);
                 }
             }
-            // Εδώ χρησιμοποιούσες ήδη σωστά το 'adapter'
             adapter.notifyDataSetChanged();
 
         } catch (Exception e) {

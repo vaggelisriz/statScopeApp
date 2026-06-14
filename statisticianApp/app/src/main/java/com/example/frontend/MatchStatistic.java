@@ -2,7 +2,6 @@ package com.example.frontend;
 
 import com.google.gson.annotations.SerializedName;
 
-// Αντιστοιχεί στις εγγραφές που επιστρέφει το getMatchStatistics.php
 public class MatchStatistic {
 
     @SerializedName("id")

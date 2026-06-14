@@ -54,7 +54,7 @@ public class LiveMatchActionsActivity extends AppCompatActivity {
             }
         });
 
-        // 🆕 ΚΛΙΚ ΣΤΑ LINEUPS (Σύνδεση με UpdateLineupsActivity και σωστά Keys)
+        // ΚΛΙΚ ΣΤΑ LINEUPS (Σύνδεση με UpdateLineupsActivity και σωστά Keys)
         btnLineups.setOnClickListener(v -> {
             if (selectedMatch != null) {
                 Intent intent = new Intent(LiveMatchActionsActivity.this, UpdateLineupsActivity.class);
@@ -70,7 +70,7 @@ public class LiveMatchActionsActivity extends AppCompatActivity {
             }
         });
 
-        // ✅ ΥΛΟΠΟΙΗΣΗ: Λογική για τη λήξη του αγώνα (Finish Match)
+        // ΥΛΟΠΟΙΗΣΗ: Λογική για τη λήξη του αγώνα (Finish Match)
         btnFinishMatch.setOnClickListener(v -> {
             if (selectedMatch == null) return;
 
@@ -83,7 +83,7 @@ public class LiveMatchActionsActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ Αποστολή αιτήματος λήξης στο Backend
+    // Αποστολή αιτήματος λήξης στο Backend
     private void sendFinishMatchToBackend() {
         RetrofitClient.getApiService().finishMatch(selectedMatch.getId()).enqueue(new Callback<StatusResponse>() {
             @Override
