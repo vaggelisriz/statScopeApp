@@ -61,14 +61,13 @@ require_once '../config/dbConnect.php';
             $champName = $_POST['championship_name'] ?? '';
             $teams = $_POST['selected_teams'] ?? []; 
 
-            // Βασικοί έλεγχοι
-            if (empty($champName) || count($teams) < 2 || count($teams) % 2 != 0) {
+            // Βασικοί έλεγχοι (Αφαιρέθηκε ο περιορισμός του % 2 != 0, γιατί πλέον το διαχειριζόμαστε με ρεπό αν χρειαστεί)
+            if (empty($champName) || count($teams) < 2) {
                 echo '<div class="status-icon status-error">⚠</div>';
                 echo '<div class="message-title status-error">Error</div>';
                 echo '<div class="message-body">';
                 if (empty($champName)) echo "Championship name is required.<br>";
-                if (count($teams) < 2) echo "A single Championhsip requires a minimum number of 2 teams.<br>";
-                if (count($teams) % 2 != 0) echo "Even number of teams required (You Selected: " . count($teams) . ").";
+                if (count($teams) < 2) echo "A single Championship requires a minimum number of 2 teams.<br>";
                 echo '</div>';
             } else {
                 try {
@@ -79,22 +78,39 @@ require_once '../config/dbConnect.php';
                     $stmtChamp->execute([$champName]);
                     $championshipId = $pdo->lastInsertId();
 
+                    // Αν ο αριθμός των ομάδων είναι περιττός, βάζουμε μια εικονική ομάδα 0 (Ρεπό)
+                    if (count($teams) % 2 != 0) {
+                        $teams[] = 0;
+                    }
+
                     $numTeams = count($teams);
-                    $rounds = $numTeams - 1;
+                    $roundsSingle = $numTeams - 1; // Οι αγωνιστικές του 1ου γύρου
                     $matchesPerRound = $numTeams / 2;
 
                     shuffle($teams);
 
-                    for ($i = 0; $i < $rounds; $i++) {
+                    // Αλγόριθμος Round-Robin για 1ο και 2ο γύρο παράλληλα
+                    for ($i = 0; $i < $roundsSingle; $i++) {
                         for ($j = 0; $j < $matchesPerRound; $j++) {
                             $home = $teams[$j];
                             $away = $teams[$numTeams - 1 - $j];
 
-                            $sql = "INSERT INTO matches (championship_id, home_team_id, away_team_id, match_round) VALUES (?, ?, ?, ?)";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute([$championshipId, $home, $away, $i + 1]);
+                            // Αν κάποια ομάδα παίζει με το ρεπό (ID 0), δεν γράφουμε τον αγώνα στη βάση
+                            if ($home != 0 && $away != 0) {
+                                
+                                // 🏠 1ος Γύρος: Κανονική έδρα (Αγωνιστικές 1 έως X)
+                                $sql1 = "INSERT INTO matches (championship_id, home_team_id, away_team_id, match_round) VALUES (?, ?, ?, ?)";
+                                $stmt1 = $pdo->prepare($sql1);
+                                $stmt1->execute([$championshipId, $home, $away, $i + 1]);
+
+                                // ✈️ 2ος Γύρος: Αντίστροφη έδρα (Αγωνιστικές X+1 έως 2X)
+                                $sql2 = "INSERT INTO matches (championship_id, home_team_id, away_team_id, match_round) VALUES (?, ?, ?, ?)";
+                                $stmt2 = $pdo->prepare($sql2);
+                                $stmt2->execute([$championshipId, $away, $home, $i + 1 + $roundsSingle]);
+                            }
                         }
 
+                        // Κυκλικό rotation των ομάδων (κρατώντας την πρώτη σταθερή)
                         $fixed = array_shift($teams);
                         $last = array_pop($teams);
                         array_unshift($teams, $last);
@@ -107,8 +123,8 @@ require_once '../config/dbConnect.php';
                     echo '<div class="status-icon status-success">✓</div>';
                     echo '<div class="message-title status-success">Success!</div>';
                     echo '<div class="message-body">';
-                    echo "Championship '<b>" . htmlspecialchars($champName) . "' </b> created.<br>";
-                    echo "The draw included " . count($teams) . " teams.";
+                    echo "Championship '<b>" . htmlspecialchars($champName) . "</b>' created.<br>";
+                    echo "Generated " . ($roundsSingle * 2) . " matchdays (Home & Away matches included).";
                     echo '</div>';
 
                 } catch (Exception $e) {

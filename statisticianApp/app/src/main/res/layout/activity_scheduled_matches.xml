@@ -47,12 +47,60 @@
         app:layout_constraintStart_toStartOf="@+id/tv_scheduled_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_scheduled_title" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout_scheduled_championships"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        app:tabBackground="@android:color/transparent"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabTextColor="#A0A0A0"
+        app:tabSelectedTextColor="#FFFFFF"
+        app:tabIndicatorColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@+id/accent_line"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout_scheduled_rounds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@android:color/transparent"
+        app:tabBackground="@android:color/transparent"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabTextColor="#FFFFFF"
+        app:tabSelectedTextColor="#FFD600"
+        app:tabIndicatorColor="#FFD600"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout_scheduled_championships"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_scheduled_matches"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accent_line" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout_scheduled_rounds"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_scheduled_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No scheduled matches found for this round."
+        android:textColor="#A0A0A0"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-condensed"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout_scheduled_rounds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

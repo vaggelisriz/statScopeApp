@@ -41,8 +41,11 @@ public class Match implements Serializable {
     @SerializedName("championship_name")
     private String championshipName;
 
+    @SerializedName("match_round")
+    private int round;
+
     public Match(int id, int championshipId, String homeTeam, String awayTeam, int homeScore, int awayScore,
-                 int homeTeamId, int awayTeamId, String status, String homeLogo, String awayLogo, String championshipName) {
+                 int homeTeamId, int awayTeamId, String status, String homeLogo, String awayLogo, String championshipName, int round) {
         this.id = id;
         this.championshipId = championshipId;
         this.homeTeam = homeTeam;
@@ -55,6 +58,7 @@ public class Match implements Serializable {
         this.homeLogo = homeLogo;
         this.awayLogo = awayLogo;
         this.championshipName = championshipName;
+        this.round = round;
     }
 
     // Getters
@@ -70,6 +74,8 @@ public class Match implements Serializable {
     public String getHomeLogo() { return homeLogo; }
     public String getAwayLogo() { return awayLogo; }
     public String getChampionshipName() { return championshipName; }
+
+    public int getRound() { return round; }
 
     // Setters
     public void setHomeScore(int homeScore) { this.homeScore = homeScore; }
