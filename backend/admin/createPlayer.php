@@ -142,7 +142,7 @@ $teams = $stmt->fetchAll();
 
             <div class="form-group">
                 <label>Player Photo</label>
-                <input type="file" name="photo" accept="image/*">
+                <input type="file" name="photo" accept="image/*" required>
             </div>
 
             <button type="submit" class="stat-button" style="margin-top: 10px;">Submit new player</button>
