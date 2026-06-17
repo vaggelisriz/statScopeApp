@@ -1,6 +1,4 @@
 <?php
-// getMatchLineups.php — Επιστρέφει την 11άδα για ένα ματς
-// URL: GET /api/getMatchLineups.php?match_id=1
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -17,7 +15,7 @@ if (!isset($_GET['match_id']) || !is_numeric($_GET['match_id'])) {
 $match_id = (int) $_GET['match_id'];
 
 try {
-    // ✅ JOIN με players για να επιστρέψουμε ΟΛΑ τα στοιχεία παίκτη
+    // JOIN με players για να επιστρέψουμε ΟΛΑ τα στοιχεία παίκτη
     //    Συμπεριλαμβάνουμε team_id ώστε η Android app να κάνει home/away split
     $query = "SELECT p.id, p.name, p.position, p.photo, p.number, p.team_id
               FROM match_lineups ml
@@ -29,7 +27,7 @@ try {
     $stmt->execute([$match_id]);
     $all_players = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // ✅ Επιστρέφουμε πάντα status + players (ακόμα κι αν είναι κενό array)
+    // Επιστρέφουμε πάντα status + players (ακόμα κι αν είναι κενό array)
     //    Η Android Activity ελέγχει αν players.isEmpty() για να αποφασίσει
     //    αν θα φορτώσει default lineup από getPlayers.php
     echo json_encode([

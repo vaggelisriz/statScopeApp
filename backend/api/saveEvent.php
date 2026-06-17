@@ -21,7 +21,6 @@ if (is_null($match_id) || is_null($event_type)) {
 try {
     $pdo->beginTransaction();
 
-    // 🛠️ ΕΔΩ ΕΙΝΑΙ Η ΠΡΟΣΘΗΚΗ: Μετατρέπουμε το 'corner_won' της Java στο 'corner' που θέλει το ENUM της βάσης σου
     if ($event_type === 'corner_won' || $event_type === 'corner') {
         $event_type = 'corner';
     }
@@ -56,7 +55,7 @@ try {
                 $updateScore = "UPDATE matches SET away_score = away_score + 1 WHERE id = ?";
             }
         } else {
-            // ΔΙΟΡΘΩΣΗ: Εάν είναι ομαδικό γκολ (π.χ. αυτογκόλ από λάθος), βασιζόμαστε στο is_home_selected της Java
+            // Εάν είναι ομαδικό γκολ (π.χ. αυτογκόλ από λάθος), βασιζόμαστε στο is_home_selected της Java
             // Αν η Java λέει ότι επιλέχθηκε η Home Team, τότε το γκολ πάει στην Home Team.
             if ($is_home_selected === 'true' || $is_home_selected === '1' || $is_home_selected === true) {
                 $updateScore = "UPDATE matches SET home_score = home_score + 1 WHERE id = ?";

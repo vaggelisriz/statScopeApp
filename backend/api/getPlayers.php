@@ -13,7 +13,6 @@ $team_id = (int)$_GET['team_id'];
 
 
 try {
-    // ΠΡΟΣΘΕΣΑΜΕ: age, number στο SELECT
     $sql = "SELECT id, name, position, photo, age, number FROM players WHERE team_id = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$team_id]);

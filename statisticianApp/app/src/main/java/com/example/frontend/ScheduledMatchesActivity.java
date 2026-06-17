@@ -33,7 +33,6 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
     private MatchAdapter adapter;
     private ImageButton btnBack;
 
-    // 100% ΔΙΚΗ ΣΟΥ ΜΕΤΑΒΛΗΤΗ: Η λίστα που μοιράζεται ο adapter
     private final List<Match> scheduledMatches = new ArrayList<>();
 
     // Στοιχεία UI από το έτοιμο Constraint XML σου
@@ -54,7 +53,7 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scheduled_matches);
 
-        // Σύνδεση των δικών σου Views
+        // Σύνδεση των Views
         recyclerView = findViewById(R.id.rv_scheduled_matches);
         btnBack      = findViewById(R.id.btn_back_scheduled);
 
@@ -65,7 +64,6 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Ο adapter δημιουργείται ΜΙΑ ΦΟΡΑ εδώ με τη λίστα scheduledMatches
         adapter = new MatchAdapter(this, scheduledMatches, match -> {
             Intent intent = new Intent(ScheduledMatchesActivity.this, MatchLiveControlActivity.class);
             intent.putExtra("selected_match", match);
@@ -234,7 +232,6 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     private void filterMatchesFinal() {
-        // Καθαρίζουμε τη δική σου master λίστα
         scheduledMatches.clear();
 
         if (championshipsList.isEmpty() || availableRoundNumbers.isEmpty() ||
@@ -247,14 +244,14 @@ public class ScheduledMatchesActivity extends AppCompatActivity {
         int targetChampionshipId = championshipsList.get(selectedChampionshipIndex).getId();
         int targetRound = availableRoundNumbers.get(selectedRoundIndex);
 
-        // 🔥 ΦΙΛΤΡΑΡΙΣΜΑ: Κρατάμε μόνο τα ματς που ανήκουν στο επιλεγμένο Πρωτάθλημα ΚΑΙ στην επιλεγμένη Αγωνιστική
+        // ΦΙΛΤΡΑΡΙΣΜΑ: Κρατάμε μόνο τα ματς που ανήκουν στο επιλεγμένο Πρωτάθλημα ΚΑΙ στην επιλεγμένη Αγωνιστική
         for (Match m : allFetchedMatches) {
             if (m.getChampionshipId() == targetChampionshipId && m.getRound() == targetRound) {
                 scheduledMatches.add(m);
             }
         }
 
-        // Ενημερώνουμε τον Adapter σου
+        // Ενημερώνουμε τον Adapter
         adapter.notifyDataSetChanged();
 
         if (tvEmptyState != null) {

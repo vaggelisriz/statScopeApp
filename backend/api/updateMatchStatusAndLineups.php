@@ -11,8 +11,7 @@ try {
     $match_id = $_POST['match_id'] ?? null;
     $status = $_POST['status'] ?? 'live';
     
-    // 🛠️ ΔΙΟΡΘΩΣΗ: Η PHP ελέγχει και για τα δύο πιθανά Keys (home_starters ή home_ids)
-    // ανάλογα με το ποια Activity έκανε την κλήση!
+    //  Η PHP ελέγχει και για τα δύο πιθανά Keys (home_starters ή home_ids) ανάλογα με το ποια Activity έκανε την κλήση!
     $home = $_POST['home_starters'] ?? $_POST['home_ids'] ?? [];
     $away = $_POST['away_starters'] ?? $_POST['away_ids'] ?? [];
 

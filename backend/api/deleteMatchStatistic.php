@@ -25,7 +25,6 @@ if (is_null($match_id) || is_null($event_type)) {
 try {
     $pdo->beginTransaction();
 
-    // 1. ΔΙΟΡΘΩΣΗ ENUM: Μετατροπή του 'corner_won' σε 'corner' για να ταιριάζει με τη βάση
     if ($event_type === 'corner_won' || $event_type === 'corner') {
         $event_type = 'corner';
     }

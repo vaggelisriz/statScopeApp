@@ -11,9 +11,6 @@ if (!$championship_id) {
 }
 
 try {
-    /* ΔΙΟΡΘΩΣΗ: Αντικαταστάθηκε το (goals_scored - goals_conceded) στο ORDER BY 
-       με τις πλήρεις συναρτήσεις SUM, ώστε η MySQL να εκτελέσει την ταξινόμηση σωστά.
-    */
     $sql = "SELECT 
                 t.id AS team_id,
                 t.name AS team_name,

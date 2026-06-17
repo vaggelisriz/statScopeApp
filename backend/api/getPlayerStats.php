@@ -11,7 +11,7 @@ if ($player_id === 0) {
 }
 
 try {
-    // SQL Query που υπολογίζει τα SUM/COUNT από τον match_events πίνακα σου
+    // SQL Query που υπολογίζει τα SUM/COUNT από τον match_events πίνακα 
     $sql = "SELECT 
         SUM(CASE WHEN event_type = 'shot' AND outcome = 'goal' THEN 1 ELSE 0 END) as total_goals,
         SUM(CASE WHEN event_type = 'assist' THEN 1 ELSE 0 END) as total_assists,

@@ -24,8 +24,7 @@ try {
         $stmt->execute(['championship_id' => $championship_id]);
         $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Αν για κάποιο λόγο το query του πρωταθλήματος επιστρέψει άδεια λίστα, 
-        // φέρε πάλι όλες τις ομάδες για να μην μείνει άδεια η οθόνη της συναδέλφου
+        // Αν για κάποιο λόγο το query του πρωταθλήματος επιστρέψει άδεια λίστα, φέρε πάλι όλες τις ομάδες
         if (empty($teams)) {
             $sql = "SELECT id, name, city, logo FROM teams ORDER BY name ASC";
             $stmt = $pdo->query($sql);

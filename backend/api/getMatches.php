@@ -26,7 +26,7 @@ try {
             JOIN teams t2 ON m.away_team_id = t2.id
             JOIN championships c ON m.championship_id = c.id";
 
-    // ΑΛΛΑΓΗ: Αν ζητήθηκε status, φιλτράρουμε στη βάση (π.χ. WHERE m.status = 'live')
+    // Αν ζητήθηκε status, φιλτράρουμε στη βάση (π.χ. WHERE m.status = 'live')
     if ($status !== null) {
         $sql .= " WHERE m.status = :status";
     }
